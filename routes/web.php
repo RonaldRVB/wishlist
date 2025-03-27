@@ -22,3 +22,8 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+
+Route::get('/mockup', function () {
+    return Inertia::render('Mockup');
+})->name('mockup');
