@@ -27,3 +27,6 @@ Route::middleware([
 Route::get('/mockup', function () {
     return Inertia::render('Mockup');
 })->name('mockup');
+
+
+Route::get('/colors', fn() => Inertia::render('ColorComparison'))->name('colors');
