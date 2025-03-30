@@ -64,4 +64,39 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function salutations()
+    {
+        return $this->belongsTo(Salutation::class);
+    }
+
+    public function statusUser()
+    {
+        return $this->belongsTo(StatusUser::class);
+    }
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
+
+    public function reservedGifts()
+    {
+        return $this->hasMany(Gift::class, 'reserved_by');
+    }
+
+    public function legalAcceptances()
+    {
+        return $this->hasMany(UserLegalDocument::class);
+    }
+
+    public function participantEntries()
+    {
+        return $this->hasMany(Participant::class);
+    }
 }
