@@ -20,8 +20,16 @@ return new class extends Migration
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
+
+            // 👇 Ajouts liés à wishlist
+            $table->foreignId('salutation_id')->constrained('salutations');
+            $table->foreignId('status_user_id')->default(1)->constrained('status_users');
+            $table->string('terms_version')->nullable();
+            $table->timestamp('terms_accepted_at')->nullable();
+
             $table->timestamps();
         });
+
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
