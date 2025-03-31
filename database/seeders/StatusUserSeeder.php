@@ -13,9 +13,9 @@ class StatusUserSeeder extends Seeder
     public function run(): void
     {
         DB::table('status_users')->insert([
-            ['status_value' => 'Invité'],
-            ['status_value' => 'En validation'],
-            ['status_value' => 'Actif'],
+            ['id' => 1, 'status_value' => 'Invité'],
+            ['id' => 2, 'status_value' => 'En validation'],
+            ['id' => 3, 'status_value' => 'Actif'],
         ]);
     }
 }

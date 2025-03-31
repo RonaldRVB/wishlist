@@ -2,6 +2,7 @@
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Models\LegalDocument;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -30,3 +31,11 @@ Route::get('/mockup', function () {
 
 
 Route::get('/colors', fn() => Inertia::render('ColorComparison'))->name('colors');
+
+Route::get('/mentions-legales', function () {
+    $document = LegalDocument::where('is_active', true)->latest()->first();
+
+    return Inertia::render('LegalMentions', [
+        'document' => $document,
+    ]);
+})->name('legal.mentions');

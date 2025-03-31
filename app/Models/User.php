@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Salutation;
 
 class User extends Authenticatable
 {
@@ -65,7 +66,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function salutations()
+    public function salutation()
     {
         return $this->belongsTo(Salutation::class);
     }
