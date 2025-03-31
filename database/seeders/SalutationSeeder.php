@@ -13,10 +13,10 @@ class SalutationSeeder extends Seeder
     public function run(): void
     {
         DB::table('salutations')->insert([
-            ['salutation_value' => 'Madame'],
-            ['salutation_value' => 'Mademoiselle'],
-            ['salutation_value' => 'Monsieur'],
-            ['salutation_value' => 'Autre'],
+            ['id' => 1, 'salutation_value' => 'Madame'],
+            ['id' => 2, 'salutation_value' => 'Mademoiselle'],
+            ['id' => 3, 'salutation_value' => 'Monsieur'],
+            ['id' => 4, 'salutation_value' => 'Autre'],
         ]);
     }
 }
