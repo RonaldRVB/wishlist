@@ -1,3 +1,9 @@
+<script setup>
+import AppLayout from '@/Layouts/AppLayout.vue';
+
+defineOptions({ layout: AppLayout });
+</script>
+
 <template>
     <div class="min-h-screen bg-[#E3EFFD] p-6">
         <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Comparaison des couleurs</h1>
@@ -27,7 +33,3 @@
         </div>
     </div>
 </template>
-
-<script setup>
-// Pas besoin de script ici, tout est statique pour test visuel
-</script>
