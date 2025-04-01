@@ -10,9 +10,14 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Salutation;
+use App\Enums\UserRole;
 
 class User extends Authenticatable
 {
+    protected $casts = [
+        'role' => UserRole::class,
+    ];
+
     use HasApiTokens;
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -30,6 +35,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'salutation_id',
+        'status_user_id',
+        'role',
     ];
 
     /**

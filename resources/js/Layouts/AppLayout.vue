@@ -8,6 +8,9 @@ defineProps({ title: String })
 
 const showingNavigationDropdown = ref(false)
 
+const user = usePage().props.auth.user
+const isAdmin = user?.role === 'admin'
+
 const logout = () => router.post(route('logout'))
 
 // Gestion titre + favicon dynamique
@@ -60,11 +63,39 @@ watch(() => [page.props.title, page.props.favicon], () => {
                     @click="router.visit(route('wishlists.index'))">
                     Mes listes
                 </div>
+
                 <div class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
                     :class="{ 'bg-[#2DD4BF] text-blue-800': route().current('events.*') }"
                     @click="router.visit(route('events.index'))">
                     Événements
                 </div>
+
+                <!-- Liens Admin -->
+                <div v-if="isAdmin"
+                    class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
+                    :class="{ 'bg-[#2DD4BF] text-blue-800': route().current('users.index') }"
+                    @click="router.visit(route('users.index'))">
+                    Utilisateurs
+                </div>
+
+                <div v-if="isAdmin"
+                    class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
+                    :class="{ 'bg-[#2DD4BF] text-blue-800': route().current('documents.index') }"
+                    @click="router.visit(route('documents.index'))">
+                    Documents légaux
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
             </nav>
 
@@ -107,7 +138,7 @@ watch(() => [page.props.title, page.props.favicon], () => {
             </div>
 
             <!-- Contenu injecté -->
-            <main class="p-0">
+            <main>
                 <slot />
             </main>
         </div>

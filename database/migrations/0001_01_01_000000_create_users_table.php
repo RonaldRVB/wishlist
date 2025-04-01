@@ -24,6 +24,7 @@ return new class extends Migration
             // 👇 Ajouts liés à wishlist
             $table->foreignId('salutation_id')->constrained('salutations');
             $table->foreignId('status_user_id')->default(1)->constrained('status_users');
+            $table->string('role')->default('user')->after('status_user_id');
             $table->string('terms_version')->nullable();
             $table->timestamp('terms_accepted_at')->nullable();
 
