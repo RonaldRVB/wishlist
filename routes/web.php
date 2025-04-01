@@ -25,17 +25,14 @@ Route::middleware([
 });
 
 
-Route::get('/mockup', function () {
-    return Inertia::render('Mockup');
-})->name('mockup');
+Route::get('/mockup', fn() => Inertia::render('Mockup/Mockup'))->name('mockup');
+Route::get('/colors', fn() => Inertia::render('Mockup/ColorComparison'))->name('colors');
 
-
-Route::get('/colors', fn() => Inertia::render('ColorComparison'))->name('colors');
 
 Route::get('/mentions-legales', function () {
     $document = LegalDocument::where('is_active', true)->latest()->first();
 
-    return Inertia::render('LegalMentions', [
+    return Inertia::render('Documents/LegalMentions', [
         'document' => $document,
     ]);
 })->name('legal.mentions');

@@ -29,6 +29,10 @@
 </template>
 
 <script setup>
+import AppLayout from '@/Layouts/AppLayout.vue';
+
+defineOptions({ layout: AppLayout });
+
 const gifts = Array.from({ length: 10 }, (_, i) => ({
     name: `Cadeau ${i + 1}`,
     description: 'Un super cadeau que tout le monde aimerait recevoir.',

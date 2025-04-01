@@ -46,7 +46,7 @@ Si vous pensez que votre propriété intellectuelle a été utilisée abusivemen
 
 ## Responsabilité quant au contenu
 
-Ce site a été créé dans le cadre de mes études de Webdesigner à l’IFOSUP de Wavre.
+Ce site a été créé dans le cadre de mes études de Webdeveloper à l’IFOSUP de Wavre.
 
 Je m’efforce d’en assurer l’exactitude et la mise à jour, mais je ne peux garantir l’absence d’erreurs ou d’omissions.
 

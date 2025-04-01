@@ -1,5 +1,8 @@
 <script setup>
 import { marked } from 'marked'
+import AppLayout from '@/Layouts/AppLayout.vue';
+
+defineOptions({ layout: AppLayout });
 
 // Déclarer les props
 defineProps({
@@ -24,8 +27,6 @@ renderer.link = function (token) {
     const titleAttr = title ? ` title="${title}"` : ''
     return `<a href="${href}"${titleAttr}${target}>${text}</a>`
 }
-
-
 
 marked.setOptions({
     renderer,
