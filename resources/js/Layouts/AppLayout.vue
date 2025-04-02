@@ -85,7 +85,12 @@ watch(() => [page.props.title, page.props.favicon], () => {
                     Documents légaux
                 </div>
 
-
+                <div v-if="isAdmin"
+                    class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
+                    :class="{ 'bg-[#2DD4BF] text-blue-800': route().current('images.index') }"
+                    @click="router.visit(route('images.index'))">
+                    Images par défaut
+                </div>
 
 
 
