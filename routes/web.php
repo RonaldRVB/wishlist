@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Models\LegalDocument;
 use Inertia\Inertia;
+use App\Http\Controllers\DefaultImageController;
 use App\Http\Middleware\IsAdmin;
 
 Route::get('/', function () {
@@ -58,4 +59,13 @@ Route::middleware(['auth', 'verified', IsAdmin::class])->group(function () {
     Route::put('/documents/{document}', [LegalDocumentController::class, 'update'])->name('documents.update');
     Route::delete('/documents/{document}', [LegalDocumentController::class, 'destroy'])->name('documents.destroy');
     Route::get('/documents/{document}', [LegalDocumentController::class, 'show'])->name('documents.show');
+
+    // Routes DefaultImage
+    Route::get('/images', [DefaultImageController::class, 'index'])->name('images.index');
+    Route::get('/images/create', [DefaultImageController::class, 'create'])->name('images.create');
+    Route::post('/images', [DefaultImageController::class, 'store'])->name('images.store');
+    Route::get('/images/{defaultImage}', [DefaultImageController::class, 'show'])->name('images.show');
+    Route::get('/images/{defaultImage}/edit', [DefaultImageController::class, 'edit'])->name('images.edit');
+    Route::put('/images/{defaultImage}', [DefaultImageController::class, 'update'])->name('images.update');
+    Route::delete('/images/{defaultImage}', [DefaultImageController::class, 'destroy'])->name('images.destroy');
 });

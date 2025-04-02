@@ -69,7 +69,11 @@ defineProps({
                 </div>
 
 
-                <div class="text-right">
+                <div class="text-right space-x-2">
+                    <button type="button" @click="$inertia.get(route('users.index'))"
+                        class="px-4 py-2 bg-gray-300 text-gray-700 font-semibold rounded hover:bg-gray-400">
+                        Annuler
+                    </button>
                     <button type="submit"
                         class="px-4 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700">
                         Enregistrer

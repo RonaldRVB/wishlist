@@ -16,6 +16,14 @@ defineProps({
             <h1 class="text-3xl font-bold mb-6 text-blue-900">Liste des utilisateurs</h1>
         </div>
 
+        <div class="mb-6 w-full flex justify-center">
+            <button class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-700"
+                @click="router.visit(route('users.create'))">
+                + Créer un utilisateur
+            </button>
+        </div>
+
+
         <div class="max-w-7xl w-full">
             <table class="bg-[#E3EFFD] shadow rounded-xl mx-auto overflow-hidden w-full">
                 <thead class="bg-teal-200 text-black">
