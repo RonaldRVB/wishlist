@@ -67,5 +67,7 @@ Route::middleware(['auth', 'verified', IsAdmin::class])->group(function () {
     Route::get('/images/{defaultImage}', [DefaultImageController::class, 'show'])->name('images.show');
     Route::get('/images/{defaultImage}/edit', [DefaultImageController::class, 'edit'])->name('images.edit');
     Route::put('/images/{defaultImage}', [DefaultImageController::class, 'update'])->name('images.update');
+    Route::get('/images/{image}/replace', [DefaultImageController::class, 'showReplaceForm'])->name('images.editReplace');
+    Route::post('/images/{image}/replace', [DefaultImageController::class, 'storeReplacedImage'])->name('images.replace');
     Route::delete('/images/{defaultImage}', [DefaultImageController::class, 'destroy'])->name('images.destroy');
 });

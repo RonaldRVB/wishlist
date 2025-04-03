@@ -55,7 +55,8 @@ const deleteImage = () => {
                     <tr v-for="image in images" :key="image.id" class="border-t border-green-500 text-center">
                         <td class="px-4 py-2 font-bold">{{ image.label }}</td>
                         <td class="px-4 py-2">
-                            <img :src="image.path" alt="Image par défaut" class="h-16 w-auto rounded shadow mx-auto" />
+                            <img :src="image.path + '?v=' + Date.now()" alt="Image par défaut"
+                                class="h-16 w-auto rounded shadow mx-auto" />
                         </td>
                         <td class="px-4 py-2 space-x-2">
                             <button @click="router.visit(route('images.show', image.id))"
@@ -68,6 +69,11 @@ const deleteImage = () => {
                                         d="M12 5c-7.633 0-10 7-10 7s2.367 7 10 7 10-7 10-7-2.367-7-10-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" />
                                 </svg>
 
+                            </button>
+
+                            <button @click="router.visit(route('images.editReplace', { image: image.id }))"
+                                class="text-blue-700 hover:text-[#F87171] text-xl" title="Remplacer l’image">
+                                🔁
                             </button>
 
                             <button @click="confirmDelete(image)" class="text-red-700 hover:text-[#F87171]"
