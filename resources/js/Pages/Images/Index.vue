@@ -72,13 +72,22 @@ const deleteImage = () => {
                             </button>
 
                             <button @click="router.visit(route('images.editReplace', { image: image.id }))"
-                                class="text-blue-700 hover:text-[#F87171] text-xl" title="Remplacer l’image">
-                                🔁
+                                title="Remplacer">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5 text-blue-700 hover:text-[#F87171]" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 4v5h.582M20 20v-5h-.581M5 19a9 9 0 0014.764-6M19 5A9 9 0 004.236 11" />
+                                </svg>
                             </button>
-
-                            <button @click="confirmDelete(image)" class="text-red-700 hover:text-[#F87171]"
+                            <button @click="router.visit(route('images.destroy', { image: image.id }))"
                                 title="Supprimer">
-                                🗑️
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5 text-blue-700 hover:text-[#F87171]" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3m-9 0h10" />
+                                </svg>
                             </button>
                         </td>
                     </tr>
