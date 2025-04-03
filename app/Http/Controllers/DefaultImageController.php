@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Inertia\Inertia;
 
 class DefaultImageController extends Controller
@@ -84,8 +85,50 @@ class DefaultImageController extends Controller
 
     public function destroy(DefaultImage $defaultImage)
     {
+        $imagePath = public_path($defaultImage->path);
+        if (File::exists($imagePath)) {
+            File::delete($imagePath);
+        }
+
         $defaultImage->delete();
 
-        return redirect()->route('images.index');
+        return redirect()->route('images.index')->with('success', 'Image supprimée.');
+
+        return redirect()->route('images.index')->with('success', 'Image supprimée.');
+    }
+
+    public function storeReplacedImage(Request $request, DefaultImage $image)
+    {
+        $request->validate([
+            'file' => 'required|image|max:5120', // tu peux adapter la taille max
+        ]);
+
+        $newFile = $request->file('file');
+
+        // Lire le fichier avec Intervention Image
+        $manager = new ImageManager(new Driver());
+
+        $converted = $manager->read($newFile->getPathname())
+            ->scale(width: 1000)
+            ->toWebp(75);
+
+        // Remplacer physiquement l’ancien fichier
+        $oldPath = public_path($image->path);
+
+        if (File::exists($oldPath)) {
+            File::delete($oldPath);
+        }
+
+        // Réécriture du fichier .webp avec le même nom
+        file_put_contents($oldPath, (string) $converted);
+
+        return redirect()->route('images.index')->with('success', 'Image remplacée avec succès.');
+    }
+
+    public function showReplaceForm(DefaultImage $image)
+    {
+        return Inertia::render('Images/Replace', [
+            'image' => $image,
+        ]);
     }
 }
