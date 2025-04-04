@@ -18,9 +18,10 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('slug')->unique(); // URL lisible (anniversaire-mamy)
             $table->foreignId('status_event_id')->constrained('status_events'); // “en préparation”, “actif”, “clôturé”
-            $table->string('image')->nullable(); // Image personnalisée
-            $table->foreignId('event_image_id')->nullable()->constrained('event_images')->nullOnDelete(); // Image par défaut
+            $table->string('custom_image')->nullable(); // Image personnalisée
+            $table->foreignId('default_image_id')->nullable()->constrained('default_images')->nullOnDelete(); // Image par défaut
             $table->boolean('is_public')->default(false);
+            $table->date('event_date');
             $table->timestamps();
         });
     }

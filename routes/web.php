@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Models\LegalDocument;
 use Inertia\Inertia;
 use App\Http\Controllers\DefaultImageController;
+use App\Http\Controllers\EventController;
 use App\Http\Middleware\IsAdmin;
 
 Route::get('/', function () {
@@ -43,7 +44,6 @@ Route::get('/mentions-legales', function () {
 
 
 Route::middleware(['auth', 'verified', IsAdmin::class])->group(function () {
-
     // Routes User
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
@@ -71,3 +71,10 @@ Route::middleware(['auth', 'verified', IsAdmin::class])->group(function () {
     Route::post('/images/{image}/replace', [DefaultImageController::class, 'storeReplacedImage'])->name('images.replace');
     Route::delete('/images/{defaultImage}', [DefaultImageController::class, 'destroy'])->name('images.destroy');
 });
+
+Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
+Route::post('/events', [EventController::class, 'store'])->name('events.store');
+Route::get('/events', [EventController::class, 'index'])->name('events.index');
+Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
+Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
+Route::get('/events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
