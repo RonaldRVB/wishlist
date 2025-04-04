@@ -40,27 +40,29 @@ defineProps({
                             </span>
                         </td>
                         <td class="px-4 py-2">
-                            <button @click="router.visit(route('documents.edit', doc.id))"
-                                class="text-blue-700 hover:text-[#F87171]" title="Modifier">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline" viewBox="0 0 20 20"
-                                    fill="currentColor">
-                                    <path
-                                        d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828zM4 16a1 1 0 100 2h12a1 1 0 100-2H4z" />
-                                </svg>
-                            </button>
+                            <div class="flex items-center gap-3 justify-center">
+                                <!-- Bouton Voir -->
+                                <button @click="router.visit(route('documents.show', doc.id))" title="Voir">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="w-5 h-5 text-blue-700 hover:text-[#F87171]" fill="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M12 5c-7.633 0-10 7-10 7s2.367 7 10 7 10-7 10-7-2.367-7-10-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" />
+                                    </svg>
+                                </button>
 
-                            <!-- Bouton Voir -->
-                            <button @click="router.visit(route('documents.show', doc.id))"
-                                class="text-blue-700 hover:text-teal-900 ml-2 mr-2" title="Voir">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline" viewBox="0 0 20 20"
-                                    fill="currentColor">
-                                    <path
-                                        d="M10 3c-7 0-9 7-9 7s2 7 9 7 9-7 9-7-2-7-9-7zm0 12a5 5 0 110-10 5 5 0 010 10z" />
-                                    <path d="M10 8a2 2 0 100 4 2 2 0 000-4z" />
-                                </svg>
-                            </button>
-
+                                <!-- Bouton Modifier -->
+                                <button @click="router.visit(route('documents.edit', doc.id))" title="Modifier">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="w-5 h-5 text-blue-700 hover:text-[#F87171]" viewBox="0 0 20 20"
+                                        fill="currentColor">
+                                        <path
+                                            d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828zM4 16a1 1 0 100 2h12a1 1 0 100-2H4z" />
+                                    </svg>
+                                </button>
+                            </div>
                         </td>
+
                     </tr>
                 </tbody>
             </table>
