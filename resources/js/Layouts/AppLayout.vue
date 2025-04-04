@@ -54,7 +54,7 @@ watch(() => [page.props.title, page.props.favicon], () => {
                     class="block mt-6 ml-3 h-12 w-auto cursor-pointer" @click="router.visit(route('dashboard'))" />
             </div>
 
-            <hr class="border-[#F87171] blue-300 my-4 mb-10 mt-5" />
+            <hr class="border-[#F87171] my-4 mb-10 mt-5" />
 
             <!-- Navigation -->
             <nav class="flex-grow space-y-4">
@@ -70,7 +70,12 @@ watch(() => [page.props.title, page.props.favicon], () => {
                     Événements
                 </div>
 
+
+
+
                 <!-- Liens Admin -->
+                <hr v-if="isAdmin" class="border-t-4 border-[#F87171] border-double my-6 w-full" />
+
                 <div v-if="isAdmin"
                     class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
                     :class="{ 'bg-[#2DD4BF] text-blue-800': route().current('users.index') }"

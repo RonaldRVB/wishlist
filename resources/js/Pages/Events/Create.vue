@@ -1,0 +1,128 @@
+<script setup>
+import { computed } from 'vue'
+import { useForm, router } from '@inertiajs/vue3'
+import { ref } from 'vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+defineOptions({ layout: AppLayout })
+
+
+
+const props = defineProps({
+    defaultImages: Array,
+})
+
+const selectedImageId = computed(() => form.default_image_id)
+
+
+const customImagePreview = ref(null)
+
+const handleCustomImage = (e) => {
+    const file = e.target.files[0]
+    form.custom_image = file
+
+    if (file) {
+        customImagePreview.value = URL.createObjectURL(file)
+    } else {
+        customImagePreview.value = null
+    }
+}
+
+const form = useForm({
+    title: '',
+    description: '',
+    event_date: '',
+    is_public: false,
+    default_image_id: null,
+    custom_image: null,
+})
+
+const submit = () => {
+    form.post(route('events.store'), {
+        forceFormData: true,
+    })
+}
+</script>
+
+<template>
+    <div class="w-full min-h-screen bg-[#D6E9FC] py-10 px-6 flex flex-col items-center">
+        <div class="not-prose max-w-4xl w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-blue-900">Créer un événement</h1>
+
+                <button @click="router.visit(route('events.index'))"
+                    class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-700">
+                    Retour
+                </button>
+            </div>
+
+            <div class="bg-[#E3EFFD] rounded-xl shadow border border-blue-300 p-6 space-y-6">
+                <form @submit.prevent="submit" class="space-y-6 w-full">
+
+                    <div>
+                        <label class="block font-semibold text-blue-900 mb-1">Titre de l’événement</label>
+                        <input v-model="form.title" type="text" class="w-full rounded px-4 py-2 border border-gray-300"
+                            required />
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-blue-900 mb-1">Description</label>
+                        <textarea v-model="form.description"
+                            class="w-full rounded px-4 py-2 border border-gray-300"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-blue-900 mb-1">Date de l’événement</label>
+                        <input v-model="form.event_date" type="date"
+                            class="w-full rounded px-4 py-2 border border-gray-300" required />
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-blue-900 mb-1">Image personnalisée (upload)</label>
+                        <input type="file" @change="handleCustomImage" class="w-full" accept="image/*" />
+
+                        <!-- Message d'erreur -->
+                        <div v-if="form.errors.custom_image" class="text-red-700 text-sm mt-1">
+                            {{ form.errors.custom_image }}
+                        </div>
+
+                        <!-- Aperçu image personnalisée -->
+                        <div v-if="customImagePreview" class="mt-2 flex justify-center">
+                            <img :src="customImagePreview" alt="Aperçu" class="w-32 h-auto rounded shadow border" />
+                        </div>
+                    </div>
+
+                    <label class="block font-semibold text-blue-900 mb-1">Image par défaut (optionnelle)</label>
+
+                    <div>
+                        <label class="block font-semibold text-blue-900 mb-2">Choisissez une image par défaut :</label>
+
+                        <div class="flex flex-wrap gap-4">
+                            <div v-for="img in defaultImages" :key="img.id"
+                                class="cursor-pointer rounded-lg overflow-hidden shadow-sm transition-all duration-200"
+                                :class="form.default_image_id === img.id
+                                    ? 'border-2 border-blue-600 ring-2 ring-blue-300'
+                                    : 'border-2 border-gray-300'" @click="form.default_image_id = img.id"
+                                style="width: 96px;">
+                                <img :src="img.path" :alt="img.label" class="w-full h-auto max-h-24 object-contain" />
+                            </div>
+                        </div>
+
+
+                        <p v-if="!form.default_image_id" class="text-sm text-gray-600 mt-2 italic">
+                            Aucune image par défaut sélectionnée
+                        </p>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button type="submit"
+                            class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-700"
+                            :disabled="form.processing">
+                            Créer l’événement
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</template>

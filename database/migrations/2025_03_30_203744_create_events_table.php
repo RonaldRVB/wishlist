@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('custom_image')->nullable(); // Image personnalisée
             $table->foreignId('default_image_id')->nullable()->constrained('default_images')->nullOnDelete(); // Image par défaut
             $table->boolean('is_public')->default(false);
+            $table->date('event_date');
             $table->timestamps();
         });
     }

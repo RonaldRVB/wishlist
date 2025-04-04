@@ -6,6 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
+    protected $fillable = [
+        'title',
+        'description',
+        'event_date',
+        'is_public',
+        'default_image_id',
+        'custom_image',
+        'user_id',
+        'status_event_id',
+        'slug',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -16,10 +28,11 @@ class Event extends Model
         return $this->belongsTo(StatusEvent::class, 'status_event_id');
     }
 
-    public function eventImage()
+    public function defaultImage()
     {
-        return $this->belongsTo(EventImage::class);
+        return $this->belongsTo(DefaultImage::class);
     }
+
 
     public function wishlists()
     {

@@ -12,6 +12,14 @@ export default {
         "./resources/js/**/*.vue",
     ],
 
+    safelist: [
+        "border-blue-600",
+        "ring-blue-300",
+        "border-gray-300",
+        "border-2",
+        "ring-2",
+    ],
+
     theme: {
         extend: {
             fontFamily: {

@@ -1,0 +1,52 @@
+<script setup>
+import { router } from '@inertiajs/vue3'
+import AppLayout from '@/Layouts/AppLayout.vue'
+defineOptions({ layout: AppLayout })
+
+const props = defineProps({
+    event: Object,
+})
+
+const baseUrl = window.location.origin
+</script>
+
+<template>
+    <div class="w-full min-h-screen bg-[#D6E9FC] py-10 px-6 flex flex-col items-center">
+        <div class="not-prose max-w-4xl w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-blue-900">Événement : {{ event.title }}</h1>
+
+                <button @click="router.visit(route('events.index'))"
+                    class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-700">
+                    Retour
+                </button>
+            </div>
+
+            <div class="bg-[#E3EFFD] rounded-xl shadow border border-blue-300 p-6 flex flex-col items-start">
+
+                <!-- Image en grand au-dessus -->
+                <img :src="event.custom_image || event.default_image?.path" :alt="event.title"
+                    class="max-w-full mx-auto max-h-[500px] rounded shadow mb-6" />
+
+                <!-- Infos textuelles en dessous -->
+                <p class="mb-2"><span class="font-semibold text-blue-900 pl-5">Description :</span>
+                    {{ event.description || 'Aucune description fournie.' }}
+                </p>
+
+                <p class="mb-2"><span class="font-semibold text-blue-900 pl-5">Date :</span>
+                    {{ new Date(event.event_date).toLocaleDateString('fr-FR') }}
+                </p>
+
+                <p class="mb-2 pl-5">
+                    <span class="font-semibold text-blue-900">URL :</span>
+                    {{ baseUrl + '/events/' + event.slug }}
+                </p>
+
+                <p class="mb-2"><span class="font-semibold text-blue-900 pl-5">Visibilité :</span>
+                    {{ event.is_public ? 'Public' : 'Privé' }}
+                </p>
+            </div>
+
+        </div>
+    </div>
+</template>
