@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreignId('default_image_id')->nullable()->constrained('default_images')->nullOnDelete(); // Image par défaut
             $table->boolean('is_public')->default(false);
             $table->date('event_date');
+            $table->date('end_date')->nullable(); // Champ optionnel pour date de clôture
             $table->timestamps();
         });
     }

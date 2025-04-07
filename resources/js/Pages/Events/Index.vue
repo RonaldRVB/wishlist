@@ -6,6 +6,13 @@ defineOptions({ layout: AppLayout })
 const props = defineProps({
     events: Array,
 })
+
+function confirmDelete(id) {
+    if (confirm('Voulez-vous vraiment supprimer cet événement ?')) {
+        router.delete(route('events.destroy', id))
+    }
+}
+
 </script>
 
 <template>
@@ -54,6 +61,18 @@ const props = defineProps({
                                             d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828zM4 16a1 1 0 100 2h12a1 1 0 100-2H4z" />
                                     </svg>
                                 </button>
+
+                                <!-- Supprimer -->
+                                <button @click="confirmDelete(event.id)" class="text-blue-700 hover:text-red-600 ml-2"
+                                    title="Supprimer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                                    </svg>
+
+                                </button>
+
                             </td>
                         </tr>
                     </tbody>
