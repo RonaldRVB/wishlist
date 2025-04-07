@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 class EventController extends Controller
 {
@@ -121,5 +122,28 @@ class EventController extends Controller
         $event->update($validated);
 
         return redirect()->route('events.show', $event->id)->with('success', 'Événement mis à jour.');
+    }
+    /**
+     * @param \App\Models\Event $event
+     */
+    public function destroy(Event $event)
+    {
+        /** @var \App\Models\Event $event */
+
+        if (auth()->id() !== $event->user_id) {
+            abort(403);
+        }
+
+        // Supprimer l'image personnalisée si elle existe
+        if ($event->custom_image) {
+            $imagePath = public_path($event->custom_image);
+            if (File::exists($imagePath)) {
+                File::delete($imagePath);
+            }
+        }
+
+        $event->delete();
+
+        return redirect()->route('events.index')->with('success', 'Événement supprimé.');
     }
 }

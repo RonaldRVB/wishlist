@@ -78,3 +78,4 @@ Route::get('/events', [EventController::class, 'index'])->name('events.index');
 Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
 Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
 Route::get('/events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
+Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
