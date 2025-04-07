@@ -16,8 +16,19 @@ const form = useForm({
     event_date: props.event.event_date,
     default_image_id: props.event.default_image_id,
     custom_image: null, // nouveau fichier à uploader
+    end_date: props.event.end_date,
     _method: 'put',
 })
+
+function handleFileChange(event) {
+    form.custom_image = event.target.files[0]
+
+    // Supprimer le message d'erreur si l'image est remplacée
+    if (form.errors.custom_image) {
+        delete form.errors.custom_image
+    }
+}
+
 
 const imagePreview = computed(() => {
     return form.custom_image ? URL.createObjectURL(form.custom_image) : null
@@ -31,7 +42,7 @@ const imagePreview = computed(() => {
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-3xl font-bold text-blue-900">Modifier l’événement</h1>
 
-                <button type="button" @click="router.visit(route('events.show', event.id))"
+                <button type="button" @click="router.visit(route('events.index', event.id))"
                     class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-700">
                     Retour
                 </button>
@@ -64,6 +75,13 @@ const imagePreview = computed(() => {
                         class="w-full rounded-lg border-gray-300 mt-1 shadow-sm" />
                 </div>
 
+                <!-- Date de fin (facultative) -->
+                <div>
+                    <label class="font-semibold text-blue-900">Date de fin (facultative)</label>
+                    <input type="date" v-model="form.end_date"
+                        class="w-full rounded-lg border-gray-300 mt-1 shadow-sm" />
+                </div>
+
                 <!-- Image par défaut -->
                 <div>
                     <label class="font-semibold text-blue-900 block mb-2">Image par défaut</label>
@@ -78,10 +96,24 @@ const imagePreview = computed(() => {
 
                 <!-- Image personnalisée -->
                 <div>
-                    <label class="font-semibold text-blue-900 block mb-1">Image personnalisée (facultative)</label>
-                    <input type="file" @change="form.custom_image = $event.target.files[0]" class="w-full"
-                        accept="image/*" />
+                    <label class="font-semibold text-blue-900 block mb-1">Image personnalisée
+                        <span class="ml-2 mr-2 px-2 py-0.5 rounded border text-sm font-semibold text-blue-900"
+                            style="border: 1px solid #F87171;">
+                            Max. 5 Mo
+                        </span> (facultative)
+                    </label>
+                    <input type="file" @change="handleFileChange" class="w-full" accept="image/*" />
 
+
+                </div>
+                <div v-if="form.errors.custom_image" class="text-red-600 text-sm mt-2">
+                    {{ form.errors.custom_image }}
+                </div>
+
+                <!-- Aperçu de l'image existante (si aucune nouvelle image sélectionnée) -->
+                <div v-if="event.custom_image && !form.custom_image" class="mt-4">
+                    <p class="text-gray-700 italic mb-1">Image actuelle :</p>
+                    <img :src="event.custom_image" alt="Image existante" class="max-h-40 rounded shadow border" />
                 </div>
 
                 <div v-if="imagePreview" class="mt-4">

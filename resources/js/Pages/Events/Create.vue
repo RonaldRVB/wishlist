@@ -34,6 +34,7 @@ const form = useForm({
     is_public: false,
     default_image_id: null,
     custom_image: null,
+    end_date: null,
 })
 
 const submit = () => {
@@ -74,6 +75,13 @@ const submit = () => {
                         <label class="block font-semibold text-blue-900 mb-1">Date de l’événement</label>
                         <input v-model="form.event_date" type="date"
                             class="w-full rounded px-4 py-2 border border-gray-300" required />
+                    </div>
+
+                    <!-- Date de fin (facultative) -->
+                    <div>
+                        <label class="font-semibold text-blue-900">Date de fin (facultative)</label>
+                        <input type="date" v-model="form.end_date"
+                            class="w-full rounded-lg border-gray-300 mt-1 shadow-sm" />
                     </div>
 
                     <div>
