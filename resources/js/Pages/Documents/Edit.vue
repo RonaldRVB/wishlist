@@ -22,8 +22,15 @@ const submit = () => {
 
 <template>
     <div class="w-full min-h-screen bg-[#D6E9FC] py-10 px-6 flex flex-col items-center">
-        <div class="not-prose">
-            <h1 class="text-3xl font-bold mb-6 text-blue-900">Modifier le document</h1>
+        <div class="not-prose max-w-4xl w-full">
+            <!-- Titre + bouton Retour -->
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-blue-900">Modifier le document</h1>
+                <button type="button" @click="router.visit(route('documents.index'))"
+                    class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-700">
+                    Retour
+                </button>
+            </div>
         </div>
 
         <div class="max-w-4xl w-full bg-[#E3EFFD] p-6 rounded-xl shadow border border-blue-300">

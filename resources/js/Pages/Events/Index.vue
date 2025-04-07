@@ -1,5 +1,6 @@
 <script setup>
 import { router } from '@inertiajs/vue3'
+import { ref } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 defineOptions({ layout: AppLayout })
 
@@ -7,9 +8,19 @@ const props = defineProps({
     events: Array,
 })
 
-function confirmDelete(id) {
-    if (confirm('Voulez-vous vraiment supprimer cet événement ?')) {
-        router.delete(route('events.destroy', id))
+
+const showDeleteModal = ref(false)
+const eventToDelete = ref(null)
+
+function confirmDelete(event) {
+    eventToDelete.value = event
+    showDeleteModal.value = true
+}
+
+function deleteEvent() {
+    if (eventToDelete.value) {
+        router.delete(route('events.destroy', { event: eventToDelete.value.id }))
+        showDeleteModal.value = false
     }
 }
 
@@ -63,7 +74,7 @@ function confirmDelete(id) {
                                 </button>
 
                                 <!-- Supprimer -->
-                                <button @click="confirmDelete(event.id)" class="text-blue-700 hover:text-red-600 ml-2"
+                                <button @click="confirmDelete(event)" class="text-blue-700 hover:text-red-600 ml-2"
                                     title="Supprimer">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor"
                                         viewBox="0 0 24 24">
@@ -79,5 +90,27 @@ function confirmDelete(id) {
                 </table>
             </div>
         </div>
+        <!-- Modal sombre de suppression pour event -->
+        <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
+            <div class="bg-[#D6E9FC] text-blue-900 p-6 rounded-xl shadow-xl max-w-md w-full">
+                <h2 class="text-lg p-3 bg-indigo-200 rounded-xl font-bold mb-4">Confirmer la suppression</h2>
+                <p class="text-blue-900 font-bold mb-6">
+                    Es-tu sûr de vouloir supprimer l’événement :<br><br>
+                    <strong class="text-2xl font-bold">{{ eventToDelete?.title }} ?</strong><br><br>
+                    Cette action est <span class="text-lg italic text-red-400 font-bold">irréversible</span>.
+                </p>
+
+                <div class="flex justify-end space-x-4">
+                    <button @click="showDeleteModal = false"
+                        class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                        Annuler
+                    </button>
+                    <button @click="deleteEvent" class="px-4 py-2 bg-red-400 text-white rounded hover:bg-red-700">
+                        Supprimer
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>

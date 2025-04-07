@@ -12,16 +12,27 @@ defineProps({
 
 <template>
     <div class="w-full min-h-screen bg-[#D6E9FC] py-10 px-6 flex flex-col items-center">
-        <div class="not-prose">
-            <h1 class="text-3xl font-bold mb-2 text-blue-900">Document : {{ document.title }}</h1>
-        </div>
+        <div class="not-prose max-w-4xl w-full">
+            <div class="not-prose max-w-4xl w-full">
+                <!-- Ligne titre + modifier + retour -->
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-3xl font-bold text-blue-900">Document : {{ document.label }}</h1>
 
-        <!-- Bouton Modifier -->
-        <div class="text-right mt-4 mb-6">
-            <button @click="router.visit(route('documents.edit', document.id))"
-                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Modifier
-            </button>
+                    <div class="flex items-center space-x-4">
+                        <!-- Bouton Modifier -->
+                        <button @click="router.visit(route('documents.edit', document.id))"
+                            class="bg-teal-500 hover:bg-teal-600 text-white font-semibold px-4 py-2 rounded-xl">
+                            Modifier
+                        </button>
+
+                        <!-- Bouton Retour -->
+                        <button type="button" @click="router.visit(route('documents.index'))"
+                            class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-700">
+                            Retour
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="max-w-7xl w-full">

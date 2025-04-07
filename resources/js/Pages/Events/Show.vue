@@ -25,16 +25,25 @@ const baseUrl = window.location.origin
             <div class="bg-[#E3EFFD] rounded-xl shadow border border-blue-300 p-6 flex flex-col items-start">
 
                 <!-- Image en grand au-dessus -->
-                <img :src="event.custom_image || event.default_image?.path" :alt="event.title"
+                <img :src="(event.custom_image || event.default_image?.path) + '?v=' + Date.now()" :alt="event.title"
                     class="max-w-full mx-auto max-h-[500px] rounded shadow mb-6" />
+
 
                 <!-- Infos textuelles en dessous -->
                 <p class="mb-2"><span class="font-semibold text-blue-900 pl-5">Description :</span>
                     {{ event.description || 'Aucune description fournie.' }}
                 </p>
 
-                <p class="mb-2"><span class="font-semibold text-blue-900 pl-5">Date :</span>
+                <!-- Date -->
+                <p class="text-gray-700 mb-1">
+                    <span class="font-semibold text-blue-900 pl-5">Date :</span>
                     {{ new Date(event.event_date).toLocaleDateString('fr-FR') }}
+                </p>
+
+                <!-- Date de fin -->
+                <p v-if="event.end_date" class="text-gray-700 mb-1 pl-5">
+                    <span class="font-semibold text-blue-900">Fin prévue :</span>
+                    {{ new Date(event.end_date).toLocaleDateString('fr-FR') }}
                 </p>
 
                 <p class="mb-2 pl-5">

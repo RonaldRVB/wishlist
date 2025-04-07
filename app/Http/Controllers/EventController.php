@@ -47,6 +47,7 @@ class EventController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'event_date' => ['required', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:event_date'],
             'default_image_id' => ['nullable', 'exists:default_images,id'],
             'custom_image' => ['nullable', 'image', 'max:5120'], // 5MB max
         ], [
@@ -99,11 +100,20 @@ class EventController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'event_date' => ['required', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:event_date'],
             'default_image_id' => ['nullable', 'exists:default_images,id'],
             'custom_image' => ['nullable', 'image', 'max:5120'], // max 5MB
         ]);
 
-        // Gérer l’image personnalisée
+        // Supprimer l'ancienne image personnalisée si une nouvelle est uploadée
+        if ($request->hasFile('custom_image') && $event->custom_image) {
+            $oldPath = public_path($event->custom_image);
+            if (File::exists($oldPath)) {
+                File::delete($oldPath);
+            }
+        }
+
+        // Gérer la nouvelle image personnalisée
         if ($request->hasFile('custom_image')) {
             $manager = new ImageManager(new Driver());
 
@@ -117,12 +127,12 @@ class EventController extends Controller
             Storage::disk('public')->put($path, (string) $image);
             $validated['custom_image'] = '/storage/' . $path;
         }
-        // dd($validated); // juste avant $event->update(...)
 
         $event->update($validated);
 
         return redirect()->route('events.show', $event->id)->with('success', 'Événement mis à jour.');
     }
+
     /**
      * @param \App\Models\Event $event
      */

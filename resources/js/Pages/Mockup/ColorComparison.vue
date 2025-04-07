@@ -21,14 +21,14 @@ defineOptions({ layout: AppLayout });
             </div>
 
             <!-- Partie droite : ta palette personnalisée -->
-            <div class="space-y-4">
+            <!-- <div class="space-y-4">
                 <h2 class="text-xl font-semibold text-gray-700">Palette personnelle douce</h2>
                 <button class="bg-[#FBE844] text-black px-4 py-2 rounded-full">Bouton pastel</button>
                 <p class="text-[#A5E1E9] underline">Lien pastel</p>
                 <span class="bg-[#D6EDB9] text-black px-3 py-1 rounded-full text-sm">Succès / Réservé</span>
                 <div class="bg-[#FAC9DC] text-black p-3 rounded">Message doux d'erreur</div>
                 <div class="bg-[#FFC19A] text-black p-3 rounded">Alerte douce</div>
-            </div>
+            </div> -->
 
         </div>
     </div>
