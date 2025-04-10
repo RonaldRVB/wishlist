@@ -16,7 +16,7 @@ function confirmDelete(id) {
 </script>
 
 <template>
-    <div class="w-full min-h-screen bg-[#D6E9FC] py-10 px-6 flex flex-col items-center">
+    <div class="w-full min-h-screen bg-[#D6E9FC] py-3 px-6 flex flex-col items-center">
         <div class="not-prose pt-24 max-w-7xl w-full">
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-3xl font-bold text-blue-900">Liste des événements</h1>
