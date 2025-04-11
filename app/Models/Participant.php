@@ -25,4 +25,10 @@ class Participant extends Model
     {
         return $this->hasOne(Participant::class, 'assigned_to_id');
     }
+
+    public function invitations()
+    {
+        return $this->hasMany(Invitation::class);
+    }
+
 }
