@@ -9,6 +9,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\DefaultImageController;
 use App\Http\Controllers\EventController;
 use App\Http\Middleware\IsAdmin;
+use App\Http\Controllers\InvitationController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -50,6 +51,8 @@ Route::middleware(['auth', 'verified', IsAdmin::class])->group(function () {
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+
 
     // Routes LegalDocument
     Route::get('/documents', [LegalDocumentController::class, 'index'])->name('documents.index');
@@ -79,3 +82,11 @@ Route::get('/events/{event}', [EventController::class, 'show'])->name('events.sh
 Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
 Route::get('/events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
 Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
+
+Route::get('/events/{event}/invitations/create', [InvitationController::class, 'create'])->name('invitations.create');
+Route::post('/invitations', [InvitationController::class, 'store'])->name('invitations.store');
+
+Route::get('/events/{event}/invitations', [InvitationController::class, 'index'])->name('invitations.index');
+Route::get('/events/{event}/invitations/edit', [InvitationController::class, 'edit'])->name('invitations.edit');
+Route::post('/invitations/multiple', [InvitationController::class, 'storeMultiple'])->name('invitations.storeMultiple');
+Route::delete('/invitations/{invitation}', [InvitationController::class, 'destroy'])->name('invitations.destroy');

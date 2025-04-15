@@ -19,6 +19,8 @@ return new class extends Migration
             $table->timestamp('responded_at')->nullable();
             $table->foreignId('participant_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
+
+            $table->unique(['event_id', 'email']);
         });
     }
 

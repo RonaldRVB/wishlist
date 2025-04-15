@@ -1,5 +1,7 @@
 <script setup>
+import ModalDelete from '@/Components/Modals/ModalDelete.vue'
 import { router } from '@inertiajs/vue3'
+import { ref } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 defineOptions({ layout: AppLayout })
 
@@ -7,11 +9,22 @@ const props = defineProps({
     events: Array,
 })
 
-function confirmDelete(id) {
-    if (confirm('Voulez-vous vraiment supprimer cet événement ?')) {
-        router.delete(route('events.destroy', id))
+
+const showDeleteModal = ref(false)
+const eventToDelete = ref(null)
+
+function confirmDelete(event) {
+    eventToDelete.value = event
+    showDeleteModal.value = true
+}
+
+function deleteEvent() {
+    if (eventToDelete.value) {
+        router.delete(route('events.destroy', eventToDelete.value.id))
+        showDeleteModal.value = false
     }
 }
+
 
 </script>
 
@@ -62,15 +75,14 @@ function confirmDelete(id) {
                                     </svg>
                                 </button>
 
-                                <!-- Supprimer -->
-                                <button @click="confirmDelete(event.id)" class="text-blue-700 hover:text-red-600 ml-2"
-                                    title="Supprimer">
+                                <!-- Bouton Supprimer -->
+                                <button @click="confirmDelete(event)" title="Supprimer"
+                                    class="text-blue-700 hover:text-[#F87171]">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor"
                                         viewBox="0 0 24 24">
                                         <path
                                             d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
                                     </svg>
-
                                 </button>
 
                             </td>
@@ -79,5 +91,11 @@ function confirmDelete(id) {
                 </table>
             </div>
         </div>
+        <!-- ModalDelete -->
+        <ModalDelete :show="showDeleteModal" :entity="eventToDelete" routeName="events.destroy" labelKey="title"
+            @close="showDeleteModal = false" @confirm="deleteEvent" />
+
+
+
     </div>
 </template>
