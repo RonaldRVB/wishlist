@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Participant extends Model
 {
     protected $fillable = [
+        'invitation_id',
         'user_id',
         'event_id',
+        'name',        // ✅ AJOUTE ceci si manquant
+        'email',       // (si utilisé)
     ];
 
     public function event()

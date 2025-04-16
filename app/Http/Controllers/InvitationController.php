@@ -165,4 +165,24 @@ class InvitationController extends Controller
 
         return back()->with('success', 'Les invitations ont bien été envoyées.');
     }
+
+    public function accept(string $token)
+    {
+        $invitation = Invitation::where('token', $token)->with('event')->firstOrFail();
+
+        return Inertia::render('Participants/InvitationResponse', [
+            'invitation' => $invitation,
+            'status' => 'accepted',
+        ]);
+    }
+
+    public function refuse(string $token)
+    {
+        $invitation = Invitation::where('token', $token)->with('event')->firstOrFail();
+
+        return Inertia::render('Participants/InvitationResponse', [
+            'invitation' => $invitation,
+            'status' => 'refused',
+        ]);
+    }
 }

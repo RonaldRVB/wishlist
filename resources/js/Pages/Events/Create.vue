@@ -29,11 +29,8 @@ const form = useForm({
     is_public: false,
     default_image_id: null,
     custom_image: null,
-<<<<<<< features/participant
     emails: [''], // emails pour les invitations
-=======
     end_date: null,
->>>>>>> main
 })
 
 const selectedImageId = computed(() => form.default_image_id)
@@ -51,8 +48,12 @@ function removeEmailField(index) {
 const submit = () => {
     form.post(route('events.store'), {
         forceFormData: true,
+        onSuccess: () => {
+            router.visit(route('events.index'))
+        }
     })
 }
+
 </script>
 
 
