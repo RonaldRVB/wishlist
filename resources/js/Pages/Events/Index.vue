@@ -20,7 +20,8 @@ function confirmDelete(event) {
 
 function deleteEvent() {
     if (eventToDelete.value) {
-        router.delete(route('events.destroy', eventToDelete.value.id))
+
+        router.delete(route('events.destroy', { event: eventToDelete.value.id }))
         showDeleteModal.value = false
     }
 }
@@ -91,11 +92,10 @@ function deleteEvent() {
                 </table>
             </div>
         </div>
+
         <!-- ModalDelete -->
         <ModalDelete :show="showDeleteModal" :entity="eventToDelete" routeName="events.destroy" labelKey="title"
             @close="showDeleteModal = false" @confirm="deleteEvent" />
-
-
 
     </div>
 </template>

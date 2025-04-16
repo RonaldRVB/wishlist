@@ -25,8 +25,16 @@ defineProps({
 
 <template>
     <div class="w-full min-h-screen bg-[#E3EFFD] py-10 px-6 flex flex-col items-center">
-        <div class="not-prose">
-            <h1 class="text-3xl font-bold mb-6 text-blue-900">Créer un nouvel utilisateur</h1>
+        <div class="not-prose max-w-4xl w-full">
+            <!-- Titre + bouton retour -->
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-blue-900">Ajouter un utilisateur</h1>
+
+                <button @click="router.visit(route('users.index'))"
+                    class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-700">
+                    Retour
+                </button>
+            </div>
         </div>
 
         <div class="max-w-4xl w-full bg-white p-6 rounded-xl shadow border border-blue-300">
@@ -70,10 +78,6 @@ defineProps({
 
 
                 <div class="text-right space-x-2">
-                    <button type="button" @click="$inertia.get(route('users.index'))"
-                        class="px-4 py-2 bg-gray-300 text-gray-700 font-semibold rounded hover:bg-gray-400">
-                        Annuler
-                    </button>
                     <button type="submit"
                         class="px-4 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700">
                         Enregistrer

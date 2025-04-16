@@ -53,7 +53,6 @@ Route::middleware(['auth', 'verified', IsAdmin::class])->group(function () {
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
-
     // Routes LegalDocument
     Route::get('/documents', [LegalDocumentController::class, 'index'])->name('documents.index');
     Route::get('/documents/create', [LegalDocumentController::class, 'create'])->name('documents.create');

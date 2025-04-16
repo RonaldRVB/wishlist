@@ -29,7 +29,11 @@ const form = useForm({
     is_public: false,
     default_image_id: null,
     custom_image: null,
+<<<<<<< features/participant
     emails: [''], // emails pour les invitations
+=======
+    end_date: null,
+>>>>>>> main
 })
 
 const selectedImageId = computed(() => form.default_image_id)
@@ -89,6 +93,14 @@ const submit = () => {
                     </div>
 
                     <!-- Image personnalisée -->
+
+                    <!-- Date de fin (facultative) -->
+                    <div>
+                        <label class="font-semibold text-blue-900">Date de fin (facultative)</label>
+                        <input type="date" v-model="form.end_date"
+                            class="w-full rounded-lg border-gray-300 mt-1 shadow-sm" />
+                    </div>
+
                     <div>
                         <label class="block font-semibold text-blue-900 mb-1">Image personnalisée (upload)</label>
                         <input type="file" @change="handleCustomImage" class="w-full" accept="image/*" />

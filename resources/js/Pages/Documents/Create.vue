@@ -18,9 +18,17 @@ const submit = () => {
 
 <template>
     <div class="w-full min-h-screen bg-[#D6E9FC] py-10 px-6 flex flex-col items-center">
-        <div class="not-prose">
-            <h1 class="text-3xl font-bold mb-6 text-blue-900">Créer un document</h1>
+        <div class="not-prose max-w-4xl w-full">
+            <!-- Titre + bouton retour alignés -->
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-blue-900">Créer un document</h1>
+                <button type="button" @click="router.visit(route('documents.index'))"
+                    class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-700">
+                    Retour
+                </button>
+            </div>
         </div>
+
 
         <div class="max-w-4xl w-full bg-[#E3EFFD] p-6 rounded-xl shadow border border-blue-300">
             <form @submit.prevent="submit" class="space-y-6">
@@ -49,11 +57,6 @@ const submit = () => {
                 </div>
 
                 <div class="text-right space-x-2">
-
-                    <button type="button" @click="$inertia.get(route('documents.index'))"
-                        class="px-4 py-2 bg-gray-300 text-gray-700 font-semibold rounded hover:bg-gray-400">
-                        Annuler
-                    </button>
                     <button type="submit"
                         class="px-4 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700">
                         Créer le document

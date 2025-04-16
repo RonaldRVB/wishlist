@@ -49,6 +49,7 @@ class EventController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'event_date' => ['required', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:event_date'],
             'default_image_id' => ['nullable', 'exists:default_images,id'],
             'custom_image' => ['nullable', 'image', 'max:5120'], // 5MB max
             'emails' => ['nullable', 'array'],
@@ -107,11 +108,20 @@ class EventController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'event_date' => ['required', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:event_date'],
             'default_image_id' => ['nullable', 'exists:default_images,id'],
             'custom_image' => ['nullable', 'image', 'max:5120'], // max 5MB
         ]);
 
-        // Gérer l’image personnalisée
+        // Supprimer l'ancienne image personnalisée si une nouvelle est uploadée
+        if ($request->hasFile('custom_image') && $event->custom_image) {
+            $oldPath = public_path($event->custom_image);
+            if (File::exists($oldPath)) {
+                File::delete($oldPath);
+            }
+        }
+
+        // Gérer la nouvelle image personnalisée
         if ($request->hasFile('custom_image')) {
             // Supprimer l’ancienne image personnalisée si elle existe
             if ($event->custom_image && Storage::disk('public')->exists(str_replace('/storage/', '', $event->custom_image))) {
@@ -135,7 +145,6 @@ class EventController extends Controller
 
         return redirect()->route('events.show', $event->id)->with('success', 'Événement mis à jour.');
     }
-
 
     public function destroy(Event $event)
     {

@@ -10,6 +10,7 @@ class Event extends Model
         'title',
         'description',
         'event_date',
+        'end_date',
         'is_public',
         'default_image_id',
         'custom_image',
