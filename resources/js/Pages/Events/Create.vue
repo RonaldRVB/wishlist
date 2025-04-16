@@ -29,11 +29,8 @@ const form = useForm({
     is_public: false,
     default_image_id: null,
     custom_image: null,
-<<<<<<< features/participant
     emails: [''], // emails pour les invitations
-=======
     end_date: null,
->>>>>>> main
 })
 
 const selectedImageId = computed(() => form.default_image_id)
