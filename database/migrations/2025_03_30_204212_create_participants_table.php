@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('event_id')->constrained('events')->onDelete('cascade');
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('invitation_id')->nullable()->constrained()->onDelete('set null');
             $table->string('email')->nullable();
             $table->string('name');
             $table->foreignId('assigned_to_id')->nullable()->constrained('participants')->nullOnDelete(); // relation réflexive pour tirage

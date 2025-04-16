@@ -10,6 +10,7 @@ use App\Http\Controllers\DefaultImageController;
 use App\Http\Controllers\EventController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\ParticipantController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -90,13 +91,24 @@ Route::get('/events/{event}/invitations/edit', [InvitationController::class, 'ed
 Route::post('/invitations/multiple', [InvitationController::class, 'storeMultiple'])->name('invitations.storeMultiple');
 Route::delete('/invitations/{invitation}', [InvitationController::class, 'destroy'])->name('invitations.destroy');
 
-Route::get('/invitations/{token}/accept', function ($token) {
-    return "Invitation acceptée pour token : $token";
-})->name('invitations.accept');
-
-Route::get('/invitations/{token}/refuse', function ($token) {
-    return "Invitation refusée pour token : $token";
-})->name('invitations.refuse');
 
 Route::post('/invitations/{event}/send', [InvitationController::class, 'send'])
     ->name('invitations.send');
+
+
+
+// Route::get('/invitations/{token}/accept', function ($token) {
+//     return "Invitation acceptée pour token : $token";
+// })->name('invitations.accept');
+
+// Route::get('/invitations/{token}/refuse', function ($token) {
+//     return "Invitation refusée pour token : $token";
+// })->name('invitations.refuse');
+
+Route::get('/invitations/{token}/accept', [InvitationController::class, 'accept'])->name('invitations.accept');
+Route::get('/invitations/{token}/refuse', [InvitationController::class, 'refuse'])->name('invitations.refuse');
+
+Route::get('/participants/guest/{token}', [ParticipantController::class, 'guestAccess'])
+    ->name('participants.guest.access');
+Route::post('/participants/guest', [ParticipantController::class, 'storeGuest'])
+    ->name('participants.storeGuest');

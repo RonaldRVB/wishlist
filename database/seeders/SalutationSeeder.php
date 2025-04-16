@@ -17,6 +17,7 @@ class SalutationSeeder extends Seeder
             ['id' => 2, 'salutation_value' => 'Mademoiselle'],
             ['id' => 3, 'salutation_value' => 'Monsieur'],
             ['id' => 4, 'salutation_value' => 'Autre'],
+            ['id' => 5, 'salutation_value' => 'Guest'],
         ]);
     }
 }

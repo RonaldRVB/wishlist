@@ -88,7 +88,7 @@ class EventController extends Controller
             InvitationController::storeMultipleForEvent($validated['emails'], $event->id);
         }
 
-        return redirect()->route('events.show', $event->id)->with('success', 'Événement créé avec succès.');
+        return redirect()->route('events.index', $event->id)->with('success', 'Événement créé avec succès.');
     }
 
 

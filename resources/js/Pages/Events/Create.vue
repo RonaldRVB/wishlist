@@ -48,8 +48,12 @@ function removeEmailField(index) {
 const submit = () => {
     form.post(route('events.store'), {
         forceFormData: true,
+        onSuccess: () => {
+            router.visit(route('events.index'))
+        }
     })
 }
+
 </script>
 
 
