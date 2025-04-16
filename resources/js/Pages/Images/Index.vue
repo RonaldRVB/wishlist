@@ -1,4 +1,5 @@
 <script setup>
+import ModalDelete from '@/Components/Modals/ModalDelete.vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { router } from '@inertiajs/vue3'
 import { ref } from 'vue'
@@ -75,8 +76,7 @@ function deleteImage() {
                                 <!-- Remplacer -->
                                 <button @click="router.visit(route('images.editReplace', { image: image.id }))"
                                     title="Remplacer" class="text-blue-700 hover:text-[#F87171]">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24"
-                                        fill="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                                         <path
                                             d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 12.5l2.5 3.01L14.5 13l4.5 6H5l3.5-4.5zM8 8a2 2 0 1 1 4 0 2 2 0 0 1-4 0z" />
                                     </svg>
@@ -92,7 +92,7 @@ function deleteImage() {
                                     </svg>
                                 </button>
 
-                                <!-- Bouton Supprimer -->
+                                <!-- Supprimer -->
                                 <button @click="confirmDelete(image)" title="Supprimer"
                                     class="text-blue-700 hover:text-[#F87171]">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor"
@@ -104,27 +104,17 @@ function deleteImage() {
                             </div>
                         </td>
 
+
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div v-if="showDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white p-6 rounded-xl shadow-xl max-w-md w-full">
-                <h2 class="text-lg font-bold text-gray-800 mb-4">Confirmer la suppression</h2>
-                <p class="text-gray-600 mb-6">
-                    Es-tu sûr de vouloir supprimer l’image "<strong>{{ imageToDelete?.label }}</strong>" ?
-                </p>
-                <div class="flex justify-end space-x-4">
-                    <button @click="showDeleteModal = false"
-                        class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">
-                        Annuler
-                    </button>
-                    <button @click="deleteImage" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
-                        Supprimer
-                    </button>
-                </div>
-            </div>
-        </div>
+
+        <!-- Modal sombre et flouté -->
+        <ModalDelete :show="showDeleteModal" :entity="imageToDelete" routeName="images.destroy" labelKey="label"
+            @close="showDeleteModal = false" @confirm="deleteImage" />
+
+
 
         <!-- Modal sombre de suppression pour image -->
         <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Str;
+use App\Http\Controllers\InvitationController;
+
 use Illuminate\Support\Facades\File;
 
 class EventController extends Controller
@@ -50,11 +52,15 @@ class EventController extends Controller
             'end_date' => ['nullable', 'date', 'after_or_equal:event_date'],
             'default_image_id' => ['nullable', 'exists:default_images,id'],
             'custom_image' => ['nullable', 'image', 'max:5120'], // 5MB max
+            'emails' => ['nullable', 'array'],
+            'emails.*' => ['nullable', 'email'],
         ], [
             'custom_image.max' => 'L’image ne doit pas dépasser 5 Mo.',
         ]);
 
-        // Gérer l’upload si une image perso est fournie
+        $validated['user_id'] = auth()->id();
+
+        // Gestion de l'image personnalisée
         if ($request->hasFile('custom_image')) {
             $manager = new ImageManager(new Driver());
 
@@ -69,20 +75,22 @@ class EventController extends Controller
             $validated['custom_image'] = '/storage/' . $path;
         }
 
-        // Ajout de l'utilisateur actuel
+        $validated['slug'] = Str::slug($validated['title']) . '-' . uniqid();
         $validated['user_id'] = $request->user()->id;
-
-        // Statut par défaut = "en préparation"
         $validated['status_event_id'] = 1;
 
-        // Génération automatique du slug
-        $validated['slug'] = Str::slug($validated['title']) . '-' . uniqid();
 
-        // Création de l’événement
-        Event::create($validated);
+        // 🔹 Création de l’événement
+        $event = Event::create($validated);
 
-        return redirect()->route('events.index')->with('success', 'Événement créé avec succès.');
+        // 🔸 Ajout des invitations s’il y en a
+        if (!empty($validated['emails'])) {
+            InvitationController::storeMultipleForEvent($validated['emails'], $event->id);
+        }
+
+        return redirect()->route('events.show', $event->id)->with('success', 'Événement créé avec succès.');
     }
+
 
     public function edit(Event $event)
     {
@@ -115,6 +123,11 @@ class EventController extends Controller
 
         // Gérer la nouvelle image personnalisée
         if ($request->hasFile('custom_image')) {
+            // Supprimer l’ancienne image personnalisée si elle existe
+            if ($event->custom_image && Storage::disk('public')->exists(str_replace('/storage/', '', $event->custom_image))) {
+                Storage::disk('public')->delete(str_replace('/storage/', '', $event->custom_image));
+            }
+
             $manager = new ImageManager(new Driver());
 
             $image = $manager->read($request->file('custom_image')->getPathname())
@@ -133,22 +146,19 @@ class EventController extends Controller
         return redirect()->route('events.show', $event->id)->with('success', 'Événement mis à jour.');
     }
 
-    /**
-     * @param \App\Models\Event $event
-     */
     public function destroy(Event $event)
     {
-        /** @var \App\Models\Event $event */
-
         if (auth()->id() !== $event->user_id) {
             abort(403);
         }
 
         // Supprimer l'image personnalisée si elle existe
         if ($event->custom_image) {
-            $imagePath = public_path($event->custom_image);
-            if (File::exists($imagePath)) {
-                File::delete($imagePath);
+            // On retire le préfixe "/storage/" pour cibler le fichier réel dans storage/app/public
+            $relativePath = str_replace('/storage/', '', $event->custom_image);
+
+            if (Storage::disk('public')->exists($relativePath)) {
+                Storage::disk('public')->delete($relativePath);
             }
         }
 

@@ -54,6 +54,26 @@ const baseUrl = window.location.origin
                 <p class="mb-2"><span class="font-semibold text-blue-900 pl-5">Visibilité :</span>
                     {{ event.is_public ? 'Public' : 'Privé' }}
                 </p>
+
+
+                <!-- Boutons liés aux invitations -->
+                <div class="flex flex-wrap mt-7 gap-4 justify-end mb-6">
+                    <button @click="router.visit(route('invitations.create', { event: event.id }))"
+                        class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-700">
+                        Invitations
+                    </button>
+
+                    <button @click="router.visit(route('invitations.index', { event: event.id }))"
+                        class="bg-teal-400 text-teal-900 font-semibold px-4 py-2 rounded-xl hover:bg-teal-500">
+                        Liste des invités
+                    </button>
+
+                    <button @click="router.visit(route('invitations.edit', { event: event.id }))"
+                        class="bg-indigo-200 text-indigo-800 font-semibold px-4 py-2 rounded-xl hover:bg-indigo-300">
+                        Ajouter des invités
+                    </button>
+                </div>
+
             </div>
 
         </div>

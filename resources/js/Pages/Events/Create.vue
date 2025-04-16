@@ -1,18 +1,13 @@
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useForm, router } from '@inertiajs/vue3'
-import { ref } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
+
 defineOptions({ layout: AppLayout })
-
-
 
 const props = defineProps({
     defaultImages: Array,
 })
-
-const selectedImageId = computed(() => form.default_image_id)
-
 
 const customImagePreview = ref(null)
 
@@ -34,8 +29,24 @@ const form = useForm({
     is_public: false,
     default_image_id: null,
     custom_image: null,
+<<<<<<< features/participant
+    emails: [''], // emails pour les invitations
+=======
     end_date: null,
+>>>>>>> main
 })
+
+const selectedImageId = computed(() => form.default_image_id)
+
+function addEmailField() {
+    form.emails.push('')
+}
+
+function removeEmailField(index) {
+    if (index !== 0) {
+        form.emails.splice(index, 1)
+    }
+}
 
 const submit = () => {
     form.post(route('events.store'), {
@@ -43,6 +54,7 @@ const submit = () => {
     })
 }
 </script>
+
 
 <template>
     <div class="w-full min-h-screen bg-[#D6E9FC] py-10 px-6 flex flex-col items-center">
@@ -59,23 +71,28 @@ const submit = () => {
             <div class="bg-[#E3EFFD] rounded-xl shadow border border-blue-300 p-6 space-y-6">
                 <form @submit.prevent="submit" class="space-y-6 w-full">
 
+                    <!-- Titre -->
                     <div>
                         <label class="block font-semibold text-blue-900 mb-1">Titre de l’événement</label>
                         <input v-model="form.title" type="text" class="w-full rounded px-4 py-2 border border-gray-300"
                             required />
                     </div>
 
+                    <!-- Description -->
                     <div>
                         <label class="block font-semibold text-blue-900 mb-1">Description</label>
                         <textarea v-model="form.description"
                             class="w-full rounded px-4 py-2 border border-gray-300"></textarea>
                     </div>
 
+                    <!-- Date -->
                     <div>
                         <label class="block font-semibold text-blue-900 mb-1">Date de l’événement</label>
                         <input v-model="form.event_date" type="date"
                             class="w-full rounded px-4 py-2 border border-gray-300" required />
                     </div>
+
+                    <!-- Image personnalisée -->
 
                     <!-- Date de fin (facultative) -->
                     <div>
@@ -88,22 +105,18 @@ const submit = () => {
                         <label class="block font-semibold text-blue-900 mb-1">Image personnalisée (upload)</label>
                         <input type="file" @change="handleCustomImage" class="w-full" accept="image/*" />
 
-                        <!-- Message d'erreur -->
                         <div v-if="form.errors.custom_image" class="text-red-700 text-sm mt-1">
                             {{ form.errors.custom_image }}
                         </div>
 
-                        <!-- Aperçu image personnalisée -->
                         <div v-if="customImagePreview" class="mt-2 flex justify-center">
                             <img :src="customImagePreview" alt="Aperçu" class="w-32 h-auto rounded shadow border" />
                         </div>
                     </div>
 
-                    <label class="block font-semibold text-blue-900 mb-1">Image par défaut (optionnelle)</label>
-
+                    <!-- Image par défaut -->
                     <div>
                         <label class="block font-semibold text-blue-900 mb-2">Choisissez une image par défaut :</label>
-
                         <div class="flex flex-wrap gap-4">
                             <div v-for="img in defaultImages" :key="img.id"
                                 class="cursor-pointer rounded-lg overflow-hidden shadow-sm transition-all duration-200"
@@ -115,21 +128,43 @@ const submit = () => {
                             </div>
                         </div>
 
-
                         <p v-if="!form.default_image_id" class="text-sm text-gray-600 mt-2 italic">
                             Aucune image par défaut sélectionnée
                         </p>
                     </div>
 
+                    <!-- Invitations -->
+                    <div>
+                        <label class="block font-semibold text-blue-900 mb-2">Inviter des participants
+                            (optionnel)</label>
+
+                        <div v-for="(email, index) in form.emails" :key="index"
+                            class="flex items-center space-x-2 mb-2">
+                            <input type="email" v-model="form.emails[index]" placeholder="exemple@mail.com"
+                                class="w-full rounded border border-gray-300 p-2 shadow-sm" />
+
+                            <button v-if="index !== 0" type="button" @click="removeEmailField(index)"
+                                class="text-red-600 hover:text-red-800 font-bold text-lg">
+                                &times;
+                            </button>
+                        </div>
+
+                        <button type="button" @click="addEmailField"
+                            class="bg-green-500 text-white px-4 py-2 rounded-xl hover:bg-green-600 mt-2">
+                            + Ajouter un champ
+                        </button>
+                    </div>
+
+                    <!-- Bouton submit -->
                     <div class="flex justify-end">
                         <button type="submit"
-                            class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-700"
+                            class="bg-blue-600 text-white font-semibold px-6 py-2 rounded-xl hover:bg-blue-700"
                             :disabled="form.processing">
                             Créer l’événement
                         </button>
                     </div>
-                </form>
 
+                </form>
             </div>
         </div>
     </div>

@@ -17,7 +17,10 @@ return new class extends Migration
             $table->string('email');
             $table->string('token')->unique();
             $table->timestamp('responded_at')->nullable();
+            $table->foreignId('participant_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
+
+            $table->unique(['event_id', 'email']);
         });
     }
 

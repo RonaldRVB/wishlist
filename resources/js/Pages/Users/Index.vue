@@ -2,6 +2,7 @@
 import { router } from '@inertiajs/vue3'
 import { ref } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
+import ModalDelete from '@/Components/Modals/ModalDelete.vue'
 
 defineOptions({ layout: AppLayout })
 
@@ -23,6 +24,7 @@ function deleteUser() {
         showDeleteModal.value = false
     }
 }
+
 </script>
 
 <template>
@@ -71,7 +73,7 @@ function deleteUser() {
                                     </svg>
                                 </button>
 
-                                <!-- Supprimer -->
+                                <!-- Bouton Supprimer -->
                                 <button @click="confirmDelete(user)" title="Supprimer"
                                     class="text-blue-700 hover:text-[#F87171]">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor"
@@ -82,36 +84,11 @@ function deleteUser() {
                                 </button>
                             </div>
                         </td>
-
-
-
                     </tr>
                 </tbody>
             </table>
         </div>
-        <!-- Modal sombre de suppression -->
-        <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
-            <div class="bg-[#D6E9FC] text-blue-900 p-6 rounded-xl shadow-xl max-w-md w-full">
-                <h2 class="text-lg p-3 bg-indigo-200 rounded-xl font-bold mb-4">Confirmer la suppression</h2>
-                <p class="text-blue-900 font-bold mb-6">
-                    Es-tu sûr de vouloir supprimer l’utilisateur :<br><br> <strong class="text-2xl font-bold">{{
-                        userToDelete?.name
-                        }} ? </strong> <br><br>
-                    Cette action est <span class="text-lg italic text-red-400 font-bold">irréversible</span>.
-                </p>
-
-                <div class="flex justify-end space-x-4">
-                    <button @click="showDeleteModal = false"
-                        class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
-                        Annuler
-                    </button>
-                    <button @click="deleteUser" class="px-4 py-2 bg-red-400 text-white rounded hover:bg-red-700">
-                        Supprimer
-                    </button>
-                </div>
-            </div>
-        </div>
-
-
+        <ModalDelete v-if="showDeleteModal" :show="showDeleteModal" :entity="userToDelete" routeName="users.destroy"
+            @close="showDeleteModal = false" @confirm="deleteUser" />
     </div>
 </template>

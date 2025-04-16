@@ -1,4 +1,5 @@
 <script setup>
+import ModalDelete from '@/Components/Modals/ModalDelete.vue'
 import { router } from '@inertiajs/vue3'
 import { ref } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
@@ -19,16 +20,18 @@ function confirmDelete(event) {
 
 function deleteEvent() {
     if (eventToDelete.value) {
+
         router.delete(route('events.destroy', { event: eventToDelete.value.id }))
         showDeleteModal.value = false
     }
 }
 
+
 </script>
 
 <template>
-    <div class="w-full min-h-screen bg-[#D6E9FC] py-10 px-6 flex flex-col items-center">
-        <div class="not-prose max-w-4xl w-full">
+    <div class="w-full min-h-screen bg-[#D6E9FC] py-3 px-6 flex flex-col items-center">
+        <div class="not-prose pt-24 max-w-7xl w-full">
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-3xl font-bold text-blue-900">Liste des événements</h1>
 
@@ -73,15 +76,14 @@ function deleteEvent() {
                                     </svg>
                                 </button>
 
-                                <!-- Supprimer -->
-                                <button @click="confirmDelete(event)" class="text-blue-700 hover:text-red-600 ml-2"
-                                    title="Supprimer">
+                                <!-- Bouton Supprimer -->
+                                <button @click="confirmDelete(event)" title="Supprimer"
+                                    class="text-blue-700 hover:text-[#F87171]">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor"
                                         viewBox="0 0 24 24">
                                         <path
                                             d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
                                     </svg>
-
                                 </button>
 
                             </td>
@@ -90,27 +92,10 @@ function deleteEvent() {
                 </table>
             </div>
         </div>
-        <!-- Modal sombre de suppression pour event -->
-        <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
-            <div class="bg-[#D6E9FC] text-blue-900 p-6 rounded-xl shadow-xl max-w-md w-full">
-                <h2 class="text-lg p-3 bg-indigo-200 rounded-xl font-bold mb-4">Confirmer la suppression</h2>
-                <p class="text-blue-900 font-bold mb-6">
-                    Es-tu sûr de vouloir supprimer l’événement :<br><br>
-                    <strong class="text-2xl font-bold">{{ eventToDelete?.title }} ?</strong><br><br>
-                    Cette action est <span class="text-lg italic text-red-400 font-bold">irréversible</span>.
-                </p>
 
-                <div class="flex justify-end space-x-4">
-                    <button @click="showDeleteModal = false"
-                        class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
-                        Annuler
-                    </button>
-                    <button @click="deleteEvent" class="px-4 py-2 bg-red-400 text-white rounded hover:bg-red-700">
-                        Supprimer
-                    </button>
-                </div>
-            </div>
-        </div>
+        <!-- ModalDelete -->
+        <ModalDelete :show="showDeleteModal" :entity="eventToDelete" routeName="events.destroy" labelKey="title"
+            @close="showDeleteModal = false" @confirm="deleteEvent" />
 
     </div>
 </template>

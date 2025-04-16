@@ -16,6 +16,7 @@ class StatusUserSeeder extends Seeder
             ['id' => 1, 'status_value' => 'Invité'],
             ['id' => 2, 'status_value' => 'En validation'],
             ['id' => 3, 'status_value' => 'Actif'],
+            ['id' => 4, 'status_value' => 'Banni'],
         ]);
     }
 }

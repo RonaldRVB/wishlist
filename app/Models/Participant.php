@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Participant extends Model
 {
+    protected $fillable = [
+        'user_id',
+        'event_id',
+    ];
+
     public function event()
     {
         return $this->belongsTo(Event::class);
@@ -24,5 +29,10 @@ class Participant extends Model
     public function assignedFrom()
     {
         return $this->hasOne(Participant::class, 'assigned_to_id');
+    }
+
+    public function invitations()
+    {
+        return $this->hasMany(Invitation::class);
     }
 }
