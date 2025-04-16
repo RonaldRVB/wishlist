@@ -10,6 +10,8 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use App\Models\Event;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
+use App\Notifications\WishlistInvitation;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Database\QueryException;
 
 
@@ -64,25 +66,19 @@ class InvitationController extends Controller
         ]);
     }
 
-
     public function storeMultiple(Request $request)
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable|null $user */
-        $user = Auth::user();
-
-        if (!$user) {
-            abort(403);
-        }
-
         $validated = $request->validate([
-            'event_id' => ['required', 'exists:events,id'],
-            'emails' => ['required', 'array', 'min:1'],
-            'emails.*' => ['required', 'email'],
+            'event_id' => 'required|exists:events,id',
+            'emails' => 'required|array|min:1',
+            'emails.*' => 'required|email',
         ]);
 
+        $event = Event::findOrFail($validated['event_id']);
+
         foreach ($validated['emails'] as $email) {
-            // Vérifier si une invitation existe déjà pour cet event + email
-            $exists = Invitation::where('event_id', $validated['event_id'])
+            // Vérifie si une invitation existe déjà pour cet event + email
+            $exists = Invitation::where('event_id', $event->id)
                 ->where('email', $email)
                 ->exists();
 
@@ -92,16 +88,27 @@ class InvitationController extends Controller
                 ])->withInput();
             }
 
-            // Créer l’invitation
-            Invitation::create([
-                'event_id' => $validated['event_id'],
+            // Crée l'invitation
+            $invitation = Invitation::create([
+                'event_id' => $event->id,
                 'email' => $email,
                 'token' => Str::uuid(),
             ]);
+
+            // Envoie l'email juste après
+            Notification::route('mail', $email)->notify(
+                new WishlistInvitation(
+                    $event->title,
+                    route('invitations.accept', ['token' => $invitation->token]),
+                    route('invitations.refuse', ['token' => $invitation->token])
+                )
+            );
         }
 
-        return redirect()->route('events.show', $validated['event_id'])->with('success', 'Invitations envoyées !');
+        return redirect()->route('events.show', $event->id)
+            ->with('success', 'Invitations enregistrées et envoyées avec succès.');
     }
+
 
     public function destroy(Invitation $invitation)
     {
@@ -110,8 +117,11 @@ class InvitationController extends Controller
         return redirect()->back()->with('success', 'Invitation supprimée.');
     }
 
+
     public static function storeMultipleForEvent(array $emails, int $eventId): void
     {
+        $event = Event::findOrFail($eventId);
+
         foreach ($emails as $email) {
             // On vérifie s'il existe déjà une invitation pour cet email + event
             $exists = Invitation::where('event_id', $eventId)
@@ -122,11 +132,37 @@ class InvitationController extends Controller
                 continue; // on skip les doublons
             }
 
-            Invitation::create([
+            $invitation = Invitation::create([
                 'event_id' => $eventId,
                 'email' => $email,
                 'token' => Str::uuid(),
             ]);
+
+            // Envoi de l'email avec notification
+            Notification::route('mail', $email)->notify(
+                new WishlistInvitation(
+                    $event->title,
+                    route('invitations.accept', $invitation->token),
+                    route('invitations.refuse', $invitation->token)
+                )
+            );
         }
+    }
+
+    public function send(Event $event)
+    {
+        $invitations = $event->invitations;
+
+        foreach ($invitations as $invitation) {
+            Notification::route('mail', $invitation->email)->notify(
+                new WishlistInvitation(
+                    $event->title,
+                    route('invitations.accept', ['token' => $invitation->token]),
+                    route('invitations.refuse', ['token' => $invitation->token])
+                )
+            );
+        }
+
+        return back()->with('success', 'Les invitations ont bien été envoyées.');
     }
 }
