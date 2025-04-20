@@ -6,6 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Gift extends Model
 {
+    protected $fillable = [
+        'name',
+        'description',
+        'image',
+        'purchase_url',
+        'quantity',
+        'is_reserved',
+        'reserved_by',
+        'reserved_at',
+    ];
+
     public function reservedBy()
     {
         return $this->belongsTo(User::class, 'reserved_by');

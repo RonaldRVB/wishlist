@@ -11,6 +11,9 @@ use App\Http\Controllers\EventController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\ParticipantController;
+use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\EventWishlistController;
+use App\Http\Controllers\GiftController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -112,3 +115,22 @@ Route::get('/participants/guest/{token}', [ParticipantController::class, 'guestA
     ->name('participants.guest.access');
 Route::post('/participants/guest', [ParticipantController::class, 'storeGuest'])
     ->name('participants.storeGuest');
+
+
+Route::get('/wishlists', [WishlistController::class, 'index'])->name('wishlists.index');
+
+Route::get('/w/{slug}', [WishlistController::class, 'public'])
+    ->name('wishlists.public');
+Route::post('/wishlists', [WishlistController::class, 'store'])->name('wishlists.store');
+Route::get('/wishlists/create', function () {
+    return Inertia::render('Wishlists/Create');
+})->name('wishlists.create');
+
+
+Route::post('/events/{event}/wishlists', [EventWishlistController::class, 'store'])
+    ->name('events.wishlists.attach');
+
+
+Route::get('/gifts', [GiftController::class, 'index'])->name('gifts.index');
+Route::get('/gifts/create', [GiftController::class, 'create'])->name('gifts.create');
+Route::post('/gifts', [GiftController::class, 'store'])->name('gifts.store');

@@ -59,16 +59,37 @@ watch(() => [page.props.title, page.props.favicon], () => {
             <!-- Navigation -->
             <nav class="flex-grow space-y-4">
                 <div class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
+                    :class="{ 'bg-[#2DD4BF] text-blue-800': route().current('wishlists.create') }"
+                    @click="router.visit(route('wishlists.create'))">
+                    Créer une wishlist
+                </div>
+
+                <div class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
                     :class="{ 'bg-[#2DD4BF] text-blue-800': route().current('wishlists.*') }"
                     @click="router.visit(route('wishlists.index'))">
                     Mes listes
                 </div>
 
                 <div class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
+                    :class="{ 'bg-[#2DD4BF] text-blue-800': route().current('gifts.create') }"
+                    @click="router.visit(route('gifts.create'))">
+                    Nouveau cadeau
+                </div>
+
+                <div class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
+                    :class="{ 'bg-[#2DD4BF] text-blue-800': route().current('gifts.index') }"
+                    @click="router.visit(route('gifts.index'))">
+                    Mes cadeaux
+                </div>
+
+
+                <div class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
                     :class="{ 'bg-[#2DD4BF] text-blue-800': route().current('events.*') }"
                     @click="router.visit(route('events.index'))">
                     Événements
                 </div>
+
+
 
 
 
@@ -96,13 +117,6 @@ watch(() => [page.props.title, page.props.favicon], () => {
                     @click="router.visit(route('images.index'))">
                     Images par défaut
                 </div>
-
-
-
-
-
-
-
 
 
 
