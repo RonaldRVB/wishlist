@@ -1,17 +1,20 @@
+<script setup>
+import { useForm } from "@inertiajs/vue3";
+
+const form = useForm({
+    email: "",
+    password: "",
+    remember: false,
+});
+</script>
+
 <template>
     <div
         class="w-full min-h-screen bg-[#D6E9FC] py-10 px-6 flex items-center justify-center relative"
     >
-        <!-- Image du cadeau en fond décalé -->
-        <img
-            src="npm run dev/images/gift-1.png"
-            alt="Cadeau"
-            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-2/3 w-80 opacity-80 pointer-events-none z-0"
-        />
-
         <!-- Formulaire -->
         <div
-            class="relative z-10 bg-[#E3EFFD] border border-blue-300 rounded-xl shadow p-6 w-full max-w-md"
+            class="relative z-10 bg-[#E3EFFD] border-[15px] border-[#a7befe] rounded-[20px] shadow p-6 max-w-md"
         >
             <h1 class="text-3xl font-bold text-blue-900 text-center mb-6">
                 Connexion
@@ -91,13 +94,3 @@
         </div>
     </div>
 </template>
-
-<script setup>
-import { useForm } from "@inertiajs/vue3";
-
-const form = useForm({
-    email: "",
-    password: "",
-    remember: false,
-});
-</script>
