@@ -67,6 +67,13 @@ watch(
             ☰
         </button>
 
+        <!-- Overlay semi-transparent qui ferme le menu -->
+        <div
+            v-if="isSidebarOpen"
+            class="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 md:hidden"
+            @click="isSidebarOpen = false"
+        ></div>
+
         <!-- Sidebar responsive -->
         <aside
             :class="[
@@ -75,13 +82,6 @@ watch(
                 'md:translate-x-0 md:w-64',
             ]"
         >
-            <!-- Overlay semi-transparent qui ferme le menu -->
-            <div
-                v-if="isSidebarOpen"
-                class="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 md:hidden"
-                @click="isSidebarOpen = false"
-            ></div>
-
             <!-- Logo -->
             <div class="mb-6">
                 <img
