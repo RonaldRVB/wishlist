@@ -1,19 +1,16 @@
 <script setup>
-import { ref, onMounted, nextTick, watch, computed } from "vue";
+import { ref, onMounted, nextTick, watch } from "vue";
 import { router, usePage, Head } from "@inertiajs/vue3";
 
 const page = usePage();
-
 defineProps({ title: String });
 
-const showingNavigationDropdown = ref(false);
-
-const user = usePage().props.auth.user;
+const user = page.props.auth.user;
 const isAdmin = user?.role === "admin";
 
-const logout = () => router.post(route("logout"));
-
 const isSidebarOpen = ref(false);
+
+const logout = () => router.post(route("logout"));
 
 const handleNavigation = (routeName) => {
     router.visit(route(routeName));
@@ -39,26 +36,23 @@ const updateFavicon = async () => {
     }
     link.href = faviconPath;
 };
+
 onMounted(() => {
     setTimeout(() => {
         updateTitle();
         updateFavicon();
     }, 100);
 });
-watch(
-    () => [page.props.title, page.props.favicon],
-    () => {
-        setTimeout(() => {
-            updateTitle();
-            updateFavicon();
-        }, 100);
-    }
-);
+watch(() => [page.props.title, page.props.favicon], () => {
+    setTimeout(() => {
+        updateTitle();
+        updateFavicon();
+    }, 100);
+});
 </script>
 
 <template>
     <div class="relative h-screen overflow-hidden">
-        <!-- Barre latérale fixe -->
         <!-- Bouton menu mobile -->
         <button
             @click="isSidebarOpen = !isSidebarOpen"
@@ -67,14 +61,14 @@ watch(
             ☰
         </button>
 
-        <!-- Overlay semi-transparent qui ferme le menu -->
+        <!-- Overlay semi-transparent -->
         <div
             v-if="isSidebarOpen"
             class="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 md:hidden"
             @click="isSidebarOpen = false"
         ></div>
 
-        <!-- Sidebar responsive -->
+        <!-- Sidebar -->
         <aside
             :class="[
                 'fixed top-0 left-0 h-screen overflow-y-auto bg-[#C7D2FE] text-[#3730A3] p-4 z-50 flex flex-col transition-transform duration-300 ease-in-out',
@@ -85,54 +79,65 @@ watch(
             <!-- Logo -->
             <div class="mb-6">
                 <img
-                    id="app-logo"
                     src="/storage/images/favicon.ico"
                     alt="Logo"
                     class="block mt-6 ml-3 h-12 w-auto cursor-pointer"
-                    @click="router.visit(route('dashboard'))"
+                    @click="handleNavigation('dashboard')"
                 />
             </div>
 
             <hr class="border-[#F87171] my-4 mb-10 mt-5" />
 
-            <!-- Navigation -->
+            <!-- Liens de navigation -->
             <nav class="flex-grow space-y-4">
                 <div
                     class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
-                    :class="{
-                        'bg-[#2DD4BF] text-blue-800':
-                            route().current('wishlists.*'),
-                    }"
-                    @click="router.visit(route('wishlists.index'))"
+                    :class="{ 'bg-[#2DD4BF] text-blue-800': route().current('wishlists.create') }"
+                    @click="handleNavigation('wishlists.create')"
+                >
+                    Créer une wishlist
+                </div>
+
+                <div
+                    class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
+                    :class="{ 'bg-[#2DD4BF] text-blue-800': route().current('wishlists.*') }"
+                    @click="handleNavigation('wishlists.index')"
                 >
                     Mes listes
                 </div>
 
                 <div
                     class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
-                    :class="{
-                        'bg-[#2DD4BF] text-blue-800':
-                            route().current('events.*'),
-                    }"
-                    @click="router.visit(route('events.index'))"
+                    :class="{ 'bg-[#2DD4BF] text-blue-800': route().current('gifts.create') }"
+                    @click="handleNavigation('gifts.create')"
+                >
+                    Nouveau cadeau
+                </div>
+
+                <div
+                    class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
+                    :class="{ 'bg-[#2DD4BF] text-blue-800': route().current('gifts.index') }"
+                    @click="handleNavigation('gifts.index')"
+                >
+                    Mes cadeaux
+                </div>
+
+                <div
+                    class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
+                    :class="{ 'bg-[#2DD4BF] text-blue-800': route().current('events.*') }"
+                    @click="handleNavigation('events.index')"
                 >
                     Événements
                 </div>
 
                 <!-- Liens Admin -->
-                <hr
-                    v-if="isAdmin"
-                    class="border-t-4 border-[#F87171] border-double my-6 w-full"
-                />
+                <hr v-if="isAdmin" class="border-t-4 border-[#F87171] border-double my-6 w-full" />
 
                 <div
                     v-if="isAdmin"
                     class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
-                    :class="{
-                        'bg-[#2DD4BF] text-blue-800':
-                            route().current('users.index'),
-                    }"
-                    @click="router.visit(route('users.index'))"
+                    :class="{ 'bg-[#2DD4BF] text-blue-800': route().current('users.index') }"
+                    @click="handleNavigation('users.index')"
                 >
                     Utilisateurs
                 </div>
@@ -140,11 +145,8 @@ watch(
                 <div
                     v-if="isAdmin"
                     class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
-                    :class="{
-                        'bg-[#2DD4BF] text-blue-800':
-                            route().current('documents.index'),
-                    }"
-                    @click="router.visit(route('documents.index'))"
+                    :class="{ 'bg-[#2DD4BF] text-blue-800': route().current('documents.index') }"
+                    @click="handleNavigation('documents.index')"
                 >
                     Documents légaux
                 </div>
@@ -152,44 +154,29 @@ watch(
                 <div
                     v-if="isAdmin"
                     class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
-                    :class="{
-                        'bg-[#2DD4BF] text-blue-800':
-                            route().current('images.index'),
-                    }"
-                    @click="router.visit(route('images.index'))"
+                    :class="{ 'bg-[#2DD4BF] text-blue-800': route().current('images.index') }"
+                    @click="handleNavigation('images.index')"
                 >
                     Images par défaut
                 </div>
             </nav>
 
-            <!-- Déconnexion -->
             <hr class="border-[#F87171] my-4 mt-4" />
             <form @submit.prevent="logout">
-                <button
-                    class="block w-full font-semibold text-left py-2 px-4 rounded hover:text-blue-800 hover:bg-[#F87171]"
-                >
+                <button class="block w-full font-semibold text-left py-2 px-4 rounded hover:text-blue-800 hover:bg-[#F87171]">
                     Déconnexion
                 </button>
             </form>
 
             <hr class="border-[#F87171] my-4 mt-4" />
-
             <div
                 class="block w-full font-semibold text-left py-2 px-4 rounded hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
-                :class="{
-                    'bg-[#2DD4BF] text-blue-800':
-                        route().current('legal.mentions'),
-                }"
-                @click="router.visit(route('legal.mentions'))"
+                :class="{ 'bg-[#2DD4BF] text-blue-800': route().current('legal.mentions') }"
+                @click="handleNavigation('legal.mentions')"
             >
                 Mentions légales
             </div>
         </aside>
-
-        <!-- Image de fond -->
-        <!-- <div class="fixed inset-0 bg-cover bg-center bg-no-repeat z-[-10]"
-            style="background-image: url('/storage/images/accueil-2.webp');">
-        </div> -->
 
         <!-- Contenu principal -->
         <div
@@ -202,20 +189,16 @@ watch(
             <Head :title="title" />
 
             <!-- Flash Messages -->
-            <div
-                v-if="$page.props.flash?.success"
-                class="bg-teal-200 text-teal-900 font-semibold px-4 py-2 rounded mb-4 border border-teal-400 m-4"
-            >
+            <div v-if="$page.props.flash?.success"
+                class="bg-teal-200 text-teal-900 font-semibold px-4 py-2 rounded mb-4 border border-teal-400 m-4">
                 {{ $page.props.flash.success }}
             </div>
-            <div
-                v-if="$page.props.flash?.error"
-                class="bg-red-400 text-white px-4 py-2 rounded mb-4 border border-red-600 m-4"
-            >
+            <div v-if="$page.props.flash?.error"
+                class="bg-red-400 text-white px-4 py-2 rounded mb-4 border border-red-600 m-4">
                 {{ $page.props.flash.error }}
             </div>
 
-            <!-- Contenu injecté -->
+            <!-- Slot principal -->
             <main>
                 <slot />
             </main>
