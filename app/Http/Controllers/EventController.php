@@ -11,6 +11,7 @@ use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Str;
 use App\Http\Controllers\InvitationController;
+use App\Services\ImageUploadService;
 
 use Illuminate\Support\Facades\File;
 
@@ -51,7 +52,7 @@ class EventController extends Controller
             'event_date' => ['required', 'date'],
             'end_date' => ['nullable', 'date', 'after_or_equal:event_date'],
             'default_image_id' => ['nullable', 'exists:default_images,id'],
-            'custom_image' => ['nullable', 'image', 'max:5120'], // 5MB max
+            'custom_image' => ['nullable', 'image', 'max:5120'],
             'emails' => ['nullable', 'array'],
             'emails.*' => ['nullable', 'email'],
         ], [
@@ -59,34 +60,26 @@ class EventController extends Controller
         ]);
 
         $validated['user_id'] = auth()->id();
-
-        // Gestion de l'image personnalisée
-        if ($request->hasFile('custom_image')) {
-            $manager = new ImageManager(new Driver());
-
-            $image = $manager->read($request->file('custom_image')->getPathname())
-                ->scale(width: 1000)
-                ->toWebp(75);
-
-            $filename = uniqid('event_') . '.webp';
-            $path = 'events/' . $filename;
-
-            Storage::disk('public')->put($path, (string) $image);
-            $validated['custom_image'] = '/storage/' . $path;
-        }
-
         $validated['slug'] = Str::slug($validated['title']) . '-' . uniqid();
-        $validated['user_id'] = $request->user()->id;
         $validated['status_event_id'] = 1;
 
+        if ($request->hasFile('custom_image')) {
+            $validated['custom_image'] = ImageUploadService::uploadAndConvertToWebp(
+                $request->file('custom_image'),
+                'events',
+                'event_'
+            );
+        }
 
-        // 🔹 Création de l’événement
         $event = Event::create($validated);
 
-        // 🔸 Ajout des invitations s’il y en a
         if (!empty($validated['emails'])) {
-            InvitationController::storeMultipleForEvent($validated['emails'], $event->id);
+            $emails = array_filter($validated['emails']); // Supprime les emails vides ou null
+            if (!empty($emails)) {
+                InvitationController::storeMultipleForEvent($emails, $event->id);
+            }
         }
+
 
         return redirect()->route('events.index', $event->id)->with('success', 'Événement créé avec succès.');
     }
@@ -94,7 +87,7 @@ class EventController extends Controller
 
     public function edit(Event $event)
     {
-        $defaultImages = \App\Models\DefaultImage::orderBy('label')->get();
+        $defaultImages = DefaultImage::orderBy('label')->get();
 
         return Inertia::render('Events/Edit', [
             'event' => $event,
@@ -138,7 +131,7 @@ class EventController extends Controller
             $path = 'events/' . $filename;
 
             Storage::disk('public')->put($path, (string) $image);
-            $validated['custom_image'] = '/storage/' . $path;
+            $validated['custom_image'] = $path;
         }
 
         $event->update($validated);

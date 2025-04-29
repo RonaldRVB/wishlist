@@ -134,3 +134,5 @@ Route::post('/events/{event}/wishlists', [EventWishlistController::class, 'store
 Route::get('/gifts', [GiftController::class, 'index'])->name('gifts.index');
 Route::get('/gifts/create', [GiftController::class, 'create'])->name('gifts.create');
 Route::post('/gifts', [GiftController::class, 'store'])->name('gifts.store');
+Route::get('/gifts/{gift}/edit', [GiftController::class, 'edit'])->name('gifts.edit');
+Route::post('/gifts/{gift}/update', [GiftController::class, 'update'])->name('gifts.update');

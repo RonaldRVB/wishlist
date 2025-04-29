@@ -9,6 +9,7 @@ use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Inertia\Inertia;
+use App\Services\ImageUploadService;
 
 class DefaultImageController extends Controller
 {
@@ -28,30 +29,21 @@ class DefaultImageController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'label' => ['required', 'string', 'max:255'],
             'image' => ['required', 'image', 'max:5120'], // max 5MB
         ]);
 
-        $file = $request->file('image');
+        // Upload + conversion via le service
+        $validated['path'] = ImageUploadService::uploadAndConvertToWebp(
+            $request->file('image'),
+            'images',
+            'img_'
+        );
 
-        // On instancie l’image avec le manager (version 3)
-        $manager = new ImageManager(new Driver());
-
-        $image = $manager->read($file->getPathname())
-            ->scale(width: 1000) // ← conserve le ratio
-            ->toWebp(75); // WebP avec 75% qualité
-
-        $filename = uniqid('img_') . '.webp';
-        $path = 'images/' . $filename;
-
-        // Stocker dans le disque public
-        Storage::disk('public')->put($path, (string) $image);
-
-        // Enregistrement en base
         DefaultImage::create([
-            'label' => $request->label,
-            'path' => '/storage/' . $path,
+            'label' => $validated['label'],
+            'path' => $validated['path'], // ← sans /storage/
         ]);
 
         return redirect()->route('images.index');
@@ -93,34 +85,26 @@ class DefaultImageController extends Controller
         $defaultImage->delete();
 
         return redirect()->route('images.index')->with('success', 'Image supprimée.');
-
-        return redirect()->route('images.index')->with('success', 'Image supprimée.');
     }
 
     public function storeReplacedImage(Request $request, DefaultImage $image)
     {
         $request->validate([
-            'file' => 'required|image|max:5120', // tu peux adapter la taille max
+            'file' => ['required', 'image', 'max:5120'],
         ]);
 
         $newFile = $request->file('file');
 
-        // Lire le fichier avec Intervention Image
-        $manager = new ImageManager(new Driver());
+        // Récupérer le chemin relatif sans /storage/
+        $relativePath = $image->path; // ex: "images/img_xyz.webp"
 
-        $converted = $manager->read($newFile->getPathname())
-            ->scale(width: 1000)
-            ->toWebp(75);
-
-        // Remplacer physiquement l’ancien fichier
-        $oldPath = public_path($image->path);
-
-        if (File::exists($oldPath)) {
-            File::delete($oldPath);
+        // Sécurité : vérifier que le chemin ne contient pas de choses interdites
+        if (!str_starts_with($relativePath, 'images/')) {
+            abort(403, 'Chemin d’image non autorisé.');
         }
 
-        // Réécriture du fichier .webp avec le même nom
-        file_put_contents($oldPath, (string) $converted);
+        // Remplacer l’image existante avec le même nom
+        ImageUploadService::replaceImageWithSameName($newFile, $relativePath);
 
         return redirect()->route('images.index')->with('success', 'Image remplacée avec succès.');
     }
