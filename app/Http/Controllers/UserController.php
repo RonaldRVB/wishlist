@@ -10,6 +10,7 @@ use App\Enums\UserRole;
 use App\Models\Salutation;
 use App\Models\StatusUser;
 
+
 class UserController extends Controller
 {
     public function index()

@@ -31,12 +31,15 @@ class GiftController extends Controller
 
     public function show(Gift $gift)
     {
-        $gift->load('wishlists');
-
         return Inertia::render('Gifts/Show', [
-            'gift' => $gift,
+            'gift' => $gift->load('wishlists'),
+            'userWishlists' => auth()->user()
+                ->wishlists()
+                ->orderBy('title')
+                ->get(),
         ]);
     }
+
 
     public function create()
     {
@@ -46,7 +49,6 @@ class GiftController extends Controller
             'wishlists' => $wishlists,
         ]);
     }
-
     public function edit(Gift $gift)
     {
         return inertia('Gifts/Edit', [
@@ -117,5 +119,56 @@ class GiftController extends Controller
         $gift->update($validated);
 
         return redirect()->route('gifts.index')->with('success', 'Cadeau mis à jour avec succès.');
+    }
+
+    public function attachWishlist(Request $request, Gift $gift)
+    {
+        $request->validate([
+            'wishlist_id' => 'required|exists:wishlists,id',
+        ]);
+
+        $gift->wishlists()->syncWithoutDetaching([$request->wishlist_id]);
+
+        return back()->with('success', 'Wishlist associée au cadeau.');
+    }
+
+    public function detachWishlist(Request $request, Gift $gift)
+    {
+        $request->validate([
+            'wishlist_id' => 'required|exists:wishlists,id',
+        ]);
+
+        $gift->wishlists()->detach($request->wishlist_id);
+
+        return back()->with('success', 'Wishlist dissociée du cadeau.');
+    }
+
+    public function updateWishlists(Request $request, Gift $gift)
+    {
+        $request->validate([
+            'wishlist_ids' => 'array',
+            'wishlist_ids.*' => 'exists:wishlists,id',
+        ]);
+
+        // On synchronise les wishlists associées au gift
+        $gift->wishlists()->sync($request->wishlist_ids);
+
+        return back()->with('success', 'Les wishlists ont été mises à jour.');
+    }
+
+    public function destroy(Gift $gift)
+    {
+        // Supprimer l’image si elle existe
+        if ($gift->image && Storage::disk('public')->exists($gift->image)) {
+            Storage::disk('public')->delete($gift->image);
+        }
+
+        // Détacher toutes les wishlists
+        $gift->wishlists()->detach();
+
+        // Supprimer le cadeau
+        $gift->delete();
+
+        return redirect()->route('gifts.index')->with('success', 'Cadeau supprimé avec succès.');
     }
 }

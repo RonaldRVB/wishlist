@@ -1,11 +1,16 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
 
+const props = defineProps({
+    salutations: Array,
+});
+
 const form = useForm({
     name: "",
     email: "",
     password: "",
     password_confirmation: "",
+    salutation_id: "", // ← maintenant basé sur l’id
 });
 </script>
 
@@ -24,6 +29,36 @@ const form = useForm({
                 @submit.prevent="form.post(route('register'))"
                 class="space-y-4"
             >
+                <div>
+                    <label
+                        for="salutation_id"
+                        class="block font-semibold mb-1 text-blue-900"
+                    >
+                        Civilité
+                    </label>
+                    <select
+                        id="salutation_id"
+                        v-model="form.salutation_id"
+                        required
+                        class="w-full px-4 py-2 rounded-xl border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option disabled value="">-- Sélectionner --</option>
+                        <option
+                            v-for="item in salutations"
+                            :key="item.id"
+                            :value="item.id"
+                        >
+                            {{ item.salutation_value }}
+                        </option>
+                    </select>
+                    <div
+                        v-if="form.errors.salutation_id"
+                        class="text-red-600 text-sm mt-1"
+                    >
+                        {{ form.errors.salutation_id }}
+                    </div>
+                </div>
+
                 <div>
                     <label
                         for="name"
