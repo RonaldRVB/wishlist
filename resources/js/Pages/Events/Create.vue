@@ -1,4 +1,5 @@
 <script setup>
+import { usePage } from "@inertiajs/vue3";
 import { ref, computed } from "vue";
 import { useForm, router } from "@inertiajs/vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
@@ -7,7 +8,19 @@ defineOptions({ layout: AppLayout });
 
 const props = defineProps({
     defaultImages: Array,
+    hasWishlist: Boolean,
 });
+
+const page = usePage();
+const flashError = ref(page.props.flash?.error || null);
+
+if (flashError.value) {
+    // On "nettoie" le message immédiatement après affichage
+    setTimeout(() => {
+        page.props.flash.error = null;
+        flashError.value = null;
+    }, 0);
+}
 
 const customImagePreview = ref(null);
 
@@ -266,6 +279,13 @@ const submit = () => {
                         >
                             Créer l’événement
                         </button>
+                    </div>
+
+                    <div
+                        v-if="flashError"
+                        class="bg-red-100 text-red-900 border border-red-300 px-4 py-2 rounded-xl mb-4"
+                    >
+                        {{ flashError }}
                     </div>
                 </form>
             </div>

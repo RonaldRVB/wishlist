@@ -19,7 +19,8 @@ class WishlistController extends Controller
         $wishlists = Wishlist::where('user_id', auth()->id())->latest()->get();
 
         return Inertia::render('Wishlists/Index', [
-            'wishlists' => $wishlists
+            'wishlists' => $wishlists,
+            'flashError' => session('error'),
         ]);
     }
 
