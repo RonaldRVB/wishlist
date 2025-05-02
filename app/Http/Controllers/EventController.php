@@ -12,14 +12,15 @@ use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Str;
 use App\Http\Controllers\InvitationController;
 use App\Services\ImageUploadService;
-
+use App\Models\Wishlist;
 use Illuminate\Support\Facades\File;
 
 class EventController extends Controller
 {
     public function index()
     {
-        $events = Event::with('defaultImage') // si tu veux charger les images liées
+        $events = Event::with('defaultImage')
+            ->where('user_id', auth()->id()) // filtre par utilisateur
             ->orderBy('event_date')
             ->get();
 
@@ -37,6 +38,13 @@ class EventController extends Controller
 
     public function create()
     {
+        $wishlists = Wishlist::where('user_id', auth()->id())->get();
+
+        if ($wishlists->count() === 1 && $wishlists->first()->title === 'Ma liste personnelle') {
+            return redirect()->route('wishlists.index')
+                ->with('error', 'Vous devez d’abord créer une autre wishlist (autre que votre liste personnelle) avant de créer un événement.');
+        }
+
         $defaultImages = DefaultImage::orderBy('label')->get();
 
         return Inertia::render('Events/Create', [
@@ -79,7 +87,6 @@ class EventController extends Controller
                 InvitationController::storeMultipleForEvent($emails, $event->id);
             }
         }
-
 
         return redirect()->route('events.index', $event->id)->with('success', 'Événement créé avec succès.');
     }
