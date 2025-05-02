@@ -14,6 +14,11 @@ use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\EventWishlistController;
 use App\Http\Controllers\GiftController;
+use App\Http\Controllers\Auth\RegisterViewController;
+
+Route::get('/register', [RegisterViewController::class, 'create'])
+    ->middleware(['guest'])
+    ->name('register');
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -117,14 +122,29 @@ Route::post('/participants/guest', [ParticipantController::class, 'storeGuest'])
     ->name('participants.storeGuest');
 
 
+// 1. Index général
 Route::get('/wishlists', [WishlistController::class, 'index'])->name('wishlists.index');
 
-Route::get('/w/{slug}', [WishlistController::class, 'public'])
-    ->name('wishlists.public');
+// 2. Formulaire de création (important avant {wishlist})
+Route::get('/wishlists/create', [WishlistController::class, 'create'])->name('wishlists.create');
+
+// 3. Enregistrement
 Route::post('/wishlists', [WishlistController::class, 'store'])->name('wishlists.store');
-Route::get('/wishlists/create', function () {
-    return Inertia::render('Wishlists/Create');
-})->name('wishlists.create');
+
+// 4. Édition (important avant {wishlist})
+Route::get('/wishlists/{wishlist}/edit', [WishlistController::class, 'edit'])->name('wishlists.edit');
+
+// 5. Mise à jour
+Route::put('/wishlists/{wishlist}', [WishlistController::class, 'update'])->name('wishlists.update');
+
+// 6. Suppression
+Route::delete('/wishlists/{wishlist}', [WishlistController::class, 'destroy'])->name('wishlists.destroy');
+
+// 7. Affichage d’une wishlist privée
+Route::get('/wishlists/{wishlist}', [WishlistController::class, 'show'])->name('wishlists.show');
+
+// 8. Affichage d’une wishlist publique (slug unique)
+Route::get('/w/{slug}', [WishlistController::class, 'public'])->name('wishlists.public');
 
 
 Route::post('/events/{event}/wishlists', [EventWishlistController::class, 'store'])
@@ -134,5 +154,10 @@ Route::post('/events/{event}/wishlists', [EventWishlistController::class, 'store
 Route::get('/gifts', [GiftController::class, 'index'])->name('gifts.index');
 Route::get('/gifts/create', [GiftController::class, 'create'])->name('gifts.create');
 Route::post('/gifts', [GiftController::class, 'store'])->name('gifts.store');
+Route::get('/gifts/{gift}', [GiftController::class, 'show'])->name('gifts.show');
 Route::get('/gifts/{gift}/edit', [GiftController::class, 'edit'])->name('gifts.edit');
 Route::post('/gifts/{gift}/update', [GiftController::class, 'update'])->name('gifts.update');
+Route::post('/gifts/{gift}/wishlists/attach', [GiftController::class, 'attachWishlist'])->name('gifts.wishlists.attach');
+Route::post('/gifts/{gift}/wishlists/detach', [GiftController::class, 'detachWishlist'])->name('gifts.wishlists.detach');
+Route::put('/gifts/{gift}/wishlists', [GiftController::class, 'updateWishlists'])->name('gifts.updateWishlists');
+Route::delete('/gifts/{gift}', [GiftController::class, 'destroy'])->name('gifts.destroy');
