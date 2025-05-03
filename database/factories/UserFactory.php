@@ -74,4 +74,17 @@ class UserFactory extends Factory
             'ownedTeams'
         );
     }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            \App\Models\Wishlist::create([
+                'title' => 'Ma liste personnelle',
+                'description' => "Cette liste est votre espace personnel pour ajouter des idées de cadeaux à partager par la suite...\nAjoutez vos cadeaux personnels via le bouton ' Voir ' pour enrichir cette liste.",
+                'user_id' => $user->id,
+                'is_public' => false,
+                'slug' => Str::slug('liste-de-' . $user->name) . '-' . uniqid(),
+            ]);
+        });
+    }
 }

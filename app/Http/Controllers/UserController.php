@@ -9,6 +9,9 @@ use Inertia\Inertia;
 use App\Enums\UserRole;
 use App\Models\Salutation;
 use App\Models\StatusUser;
+use App\Models\Wishlist;
+use Illuminate\Support\Str;
+
 
 
 class UserController extends Controller
@@ -78,7 +81,7 @@ class UserController extends Controller
             'password' => ['required', 'string'], // pas de règle trop forte ici
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'salutation_id' => $validated['salutation_id'],
@@ -86,6 +89,15 @@ class UserController extends Controller
             'role' => $validated['role'],
             'password' => Hash::make($validated['password']),
         ]);
+
+        Wishlist::create([
+            'title' => 'Ma liste personnelle',
+            'description' => "Cette liste est votre espace personnel pour ajouter des idées de cadeaux à partager par la suite...\nAjoutez vos cadeaux personnels via le bouton 'Voir' pour enrichir cette liste.",
+            'user_id' => $user->id,
+            'is_public' => false,
+            'slug' => Str::slug('liste-de-' . $user->name) . '-' . uniqid(),
+        ]);
+
 
         return redirect()->route('users.index')->with('success', 'Utilisateur créé avec succès.');
     }

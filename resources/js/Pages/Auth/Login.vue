@@ -14,7 +14,7 @@ const form = useForm({
     >
         <!-- Formulaire -->
         <div
-            class="relative z-10 bg-[#E3EFFD] border-[15px] border-[#a7befe] rounded-[20px] shadow p-6 max-w-md"
+            class="relative z-10 bg-[#E3EFFD] border-[15px] border-[#a7befe] rounded-[20px] shadow-xl p-6 w-full max-w-sm"
         >
             <h1 class="text-3xl font-bold text-blue-900 text-center mb-6">
                 Connexion
@@ -65,7 +65,7 @@ const form = useForm({
                     </div>
                 </div>
 
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col items-start space-y-2">
                     <label
                         class="flex items-center space-x-2 text-sm text-blue-900"
                     >
@@ -76,12 +76,12 @@ const form = useForm({
                         />
                         <span>Se souvenir de moi</span>
                     </label>
-
                     <a
                         :href="route('password.request')"
                         class="text-blue-700 text-sm hover:underline"
-                        >Mot de passe oublié ?</a
                     >
+                        Mot de passe oublié ?
+                    </a>
                 </div>
 
                 <button
