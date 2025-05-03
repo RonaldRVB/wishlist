@@ -32,13 +32,14 @@ class DatabaseSeeder extends Seeder
             'role' => UserRole::ADMIN,
         ]);
 
-        Wishlist::create([
-            'title' => 'Ma liste personnelle',
-            'description' => "Cette liste est votre espace personnel pour ajouter des idées de cadeaux.",
-            'user_id' => $admin->id,
-            'is_public' => false,
-            'slug' => Str::slug('liste-de-' . $admin->name) . '-' . uniqid(),
-        ]);
+        // Wishlist::create([
+        //     'title' => 'Ma liste personnelle',
+        //     'description' => 'Cette liste est votre espace personnel pour ajouter des idées de cadeaux à partager par la suite...
+        //      Ajoutez vos cadeaux personnels via le bouton \' Voir \' pour enrichir cette liste.',
+        //     'user_id' => $admin->id,
+        //     'is_public' => false,
+        //     'slug' => Str::slug('liste-de-' . $admin->name) . '-' . uniqid(),
+        // ]);
 
         User::factory(10)->create();
     }
