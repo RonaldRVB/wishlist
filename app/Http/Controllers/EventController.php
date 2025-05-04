@@ -63,6 +63,7 @@ class EventController extends Controller
             'custom_image' => ['nullable', 'image', 'max:5120'],
             'emails' => ['nullable', 'array'],
             'emails.*' => ['nullable', 'email'],
+            'is_collaborative' => ['required', 'boolean'],
         ], [
             'custom_image.max' => 'L’image ne doit pas dépasser 5 Mo.',
         ]);
@@ -70,6 +71,7 @@ class EventController extends Controller
         $validated['user_id'] = auth()->id();
         $validated['slug'] = Str::slug($validated['title']) . '-' . uniqid();
         $validated['status_event_id'] = 1;
+        $validated['is_collaborative'] = $request->boolean('is_collaborative');
 
         if ($request->hasFile('custom_image')) {
             $validated['custom_image'] = ImageUploadService::uploadAndConvertToWebp(

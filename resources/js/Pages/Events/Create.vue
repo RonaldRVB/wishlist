@@ -72,6 +72,7 @@ const form = useForm({
     custom_image: null,
     emails: [""], // emails pour les invitations
     end_date: null,
+    is_collaborative: false,
 });
 
 const selectedImageId = computed(() => form.default_image_id);
@@ -156,6 +157,34 @@ const submit = () => {
                     </div>
 
                     <!-- Image personnalisée -->
+
+                    <!-- Type d’événement -->
+                    <div>
+                        <label class="block font-semibold text-blue-900 mb-2"
+                            >Type d’événement</label
+                        >
+                        <div class="flex items-center space-x-4">
+                            <label class="inline-flex items-center">
+                                <input
+                                    type="radio"
+                                    v-model="form.is_collaborative"
+                                    :value="false"
+                                    class="mr-2"
+                                />
+                                Événement personnel (ma wishlist uniquement)
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input
+                                    type="radio"
+                                    v-model="form.is_collaborative"
+                                    :value="true"
+                                    class="mr-2"
+                                />
+                                Événement collaboratif (plusieurs wishlists
+                                possibles)
+                            </label>
+                        </div>
+                    </div>
 
                     <!-- Date de fin (facultative) -->
                     <div>

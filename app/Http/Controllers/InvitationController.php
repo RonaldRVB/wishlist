@@ -28,7 +28,6 @@ class InvitationController extends Controller
         ]);
     }
 
-
     public function create(Event $event)
     {
         return Inertia::render('Invitations/Create', [
@@ -184,5 +183,16 @@ class InvitationController extends Controller
             'invitation' => $invitation,
             'status' => 'refused',
         ]);
+    }
+
+    public function storeTokenInSession(Request $request)
+    {
+        $request->validate([
+            'token' => ['required', 'string', 'exists:invitations,token'],
+        ]);
+
+        session(['invitation_token' => $request->token]);
+
+        return back(); // ou return response()->noContent(); si tu préfères une réponse vide
     }
 }
