@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('slug')->unique(); // URL lisible (anniversaire-mamy)
             $table->foreignId('status_event_id')->constrained('status_events'); // “en préparation”, “actif”, “clôturé”
+            $table->boolean('is_collaborative')->default(false);
             $table->string('custom_image')->nullable(); // Image personnalisée
             $table->foreignId('default_image_id')->nullable()->constrained('default_images')->nullOnDelete(); // Image par défaut
             $table->boolean('is_public')->default(false);

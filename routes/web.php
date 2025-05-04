@@ -103,15 +103,16 @@ Route::delete('/invitations/{invitation}', [InvitationController::class, 'destro
 Route::post('/invitations/{event}/send', [InvitationController::class, 'send'])
     ->name('invitations.send');
 
+Route::post('/invitations/store-token', [InvitationController::class, 'storeTokenInSession'])
+    ->name('invitations.storeTokenInSession');
 
+Route::get('/invitations/{token}/accept', function ($token) {
+    return "Invitation acceptée pour token : $token";
+})->name('invitations.accept');
 
-// Route::get('/invitations/{token}/accept', function ($token) {
-//     return "Invitation acceptée pour token : $token";
-// })->name('invitations.accept');
-
-// Route::get('/invitations/{token}/refuse', function ($token) {
-//     return "Invitation refusée pour token : $token";
-// })->name('invitations.refuse');
+Route::get('/invitations/{token}/refuse', function ($token) {
+    return "Invitation refusée pour token : $token";
+})->name('invitations.refuse');
 
 Route::get('/invitations/{token}/accept', [InvitationController::class, 'accept'])->name('invitations.accept');
 Route::get('/invitations/{token}/refuse', [InvitationController::class, 'refuse'])->name('invitations.refuse');
@@ -120,6 +121,9 @@ Route::get('/participants/guest/{token}', [ParticipantController::class, 'guestA
     ->name('participants.guest.access');
 Route::post('/participants/guest', [ParticipantController::class, 'storeGuest'])
     ->name('participants.storeGuest');
+
+Route::get('/invitation/{token}/wishlists', [InvitationController::class, 'showWishlistsFromInvitation'])
+    ->name('invitations.wishlists');
 
 
 // 1. Index général
