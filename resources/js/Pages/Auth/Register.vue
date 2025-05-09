@@ -1,5 +1,5 @@
 <script setup>
-import { useForm } from "@inertiajs/vue3";
+import { useForm, router } from "@inertiajs/vue3";
 
 const props = defineProps({
     salutations: Array,
@@ -12,6 +12,14 @@ const form = useForm({
     password_confirmation: "",
     salutation_id: "", // ← maintenant basé sur l’id
 });
+
+const submit = () => {
+    form.post(route("register"), {
+        onSuccess: () => {
+            router.visit(route("post.register.redirect"));
+        },
+    });
+};
 </script>
 
 <template>
@@ -25,10 +33,7 @@ const form = useForm({
                 Inscription
             </h1>
 
-            <form
-                @submit.prevent="form.post(route('register'))"
-                class="space-y-4"
-            >
+            <form @submit.prevent="submit" class="space-y-4">
                 <div>
                     <label
                         for="salutation_id"

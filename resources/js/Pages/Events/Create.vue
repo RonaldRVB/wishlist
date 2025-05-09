@@ -9,6 +9,7 @@ defineOptions({ layout: AppLayout });
 const props = defineProps({
     defaultImages: Array,
     hasWishlist: Boolean,
+    wishlists: Array,
 });
 
 const page = usePage();
@@ -73,6 +74,7 @@ const form = useForm({
     emails: [""], // emails pour les invitations
     end_date: null,
     is_collaborative: false,
+    wishlist_id: "",
 });
 
 const selectedImageId = computed(() => form.default_image_id);
@@ -167,8 +169,8 @@ const submit = () => {
                             <label class="inline-flex items-center">
                                 <input
                                     type="radio"
-                                    v-model="form.is_collaborative"
-                                    :value="false"
+                                    :checked="form.is_collaborative === false"
+                                    @change="form.is_collaborative = false"
                                     class="mr-2"
                                 />
                                 Événement personnel (ma wishlist uniquement)
@@ -176,8 +178,8 @@ const submit = () => {
                             <label class="inline-flex items-center">
                                 <input
                                     type="radio"
-                                    v-model="form.is_collaborative"
-                                    :value="true"
+                                    :checked="form.is_collaborative === true"
+                                    @change="form.is_collaborative = true"
                                     class="mr-2"
                                 />
                                 Événement collaboratif (plusieurs wishlists
@@ -185,6 +187,11 @@ const submit = () => {
                             </label>
                         </div>
                     </div>
+
+                    <!-- <p class="mt-4 text-sm text-gray-700">
+                        <strong>Debug :</strong> is_collaborative =
+                        {{ form.is_collaborative }}
+                    </p> -->
 
                     <!-- Date de fin (facultative) -->
                     <div>
@@ -260,6 +267,29 @@ const submit = () => {
                         >
                             Aucune image par défaut sélectionnée
                         </p>
+                    </div>
+
+                    <!-- Sélection de la wishlist à associer -->
+                    <div>
+                        <label class="block font-semibold text-blue-900 mb-1"
+                            >Associer une wishlist à cet événement</label
+                        >
+                        <select
+                            v-model="form.wishlist_id"
+                            class="w-full rounded border border-gray-300 px-4 py-2"
+                            required
+                        >
+                            <option disabled value="">
+                                -- Sélectionner une wishlist --
+                            </option>
+                            <option
+                                v-for="wishlist in props.wishlists"
+                                :key="wishlist.id"
+                                :value="wishlist.id"
+                            >
+                                {{ wishlist.title }}
+                            </option>
+                        </select>
                     </div>
 
                     <!-- Invitations -->

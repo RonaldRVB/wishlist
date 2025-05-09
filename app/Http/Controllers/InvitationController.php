@@ -172,6 +172,7 @@ class InvitationController extends Controller
         return Inertia::render('Participants/InvitationResponse', [
             'invitation' => $invitation,
             'status' => 'accepted',
+            'requires_account' => $invitation->event->is_collaborative,
         ]);
     }
 
@@ -194,5 +195,21 @@ class InvitationController extends Controller
         session(['invitation_token' => $request->token]);
 
         return back(); // ou return response()->noContent(); si tu préfères une réponse vide
+    }
+
+    public function handleAcceptedInvitation($token)
+    {
+        $invitation = Invitation::where('token', $token)->with('event.wishlists')->firstOrFail();
+
+        $event = $invitation->event;
+
+        // 1 seule wishlist → redirection directe vers la wishlist publique
+        if ($event->wishlists->count() === 1) {
+            $wishlist = $event->wishlists->first();
+            return redirect()->route('wishlists.public.show', ['slug' => $wishlist->slug]);
+        }
+
+        // Plusieurs wishlists → redirection vers la page qui les liste
+        return redirect()->route('events.wishlists', ['event' => $event->id]);
     }
 }

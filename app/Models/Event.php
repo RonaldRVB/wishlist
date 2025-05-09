@@ -14,10 +14,16 @@ class Event extends Model
         'is_public',
         'default_image_id',
         'custom_image',
+        'is_collaborative',
         'user_id',
         'status_event_id',
         'slug',
     ];
+
+    protected $casts = [
+        'is_collaborative' => 'boolean',
+    ];
+
 
     public function user()
     {
