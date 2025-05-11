@@ -1,10 +1,40 @@
 <script setup>
-import { useForm } from "@inertiajs/vue3";
+import { useForm, usePage, router } from "@inertiajs/vue3";
+import { watchEffect } from "vue";
 
 const form = useForm({
     email: "",
     password: "",
     remember: false,
+});
+
+// On récupère les props d'Inertia
+const page = usePage();
+
+const submit = () => {
+    form.post(route("login"), {
+        onSuccess: () => {
+            const token = page.props.invitation_token;
+
+            if (token) {
+                router.visit(route("invitations.handle.accepted", { token }));
+            } else {
+                router.visit(route("dashboard"));
+            }
+        },
+    });
+};
+
+// Dès que la page est chargée et qu’un token est présent, redirection manuelle
+watchEffect(() => {
+    const token = page.props.invitation_token;
+
+    if (token) {
+        // Redirige après login vers la route qui gère les tokens
+        router.post(route("invitations.storeTokenInSession"), {
+            token,
+        });
+    }
 });
 </script>
 

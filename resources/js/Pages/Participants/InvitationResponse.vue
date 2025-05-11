@@ -4,6 +4,7 @@ import { router } from "@inertiajs/vue3";
 const props = defineProps({
     invitation: Object,
     status: String,
+    requires_account: Boolean,
 });
 
 function registerAsUser() {
@@ -14,7 +15,7 @@ function registerAsUser() {
         },
         {
             onSuccess: () => {
-                router.visit(route("register"));
+                window.location.href = route("register"); // ← redirection réelle
             },
         },
     );
@@ -55,6 +56,12 @@ function continueAsGuest() {
                 }}
             </p>
 
+            <!-- Message d'information si compte requis -->
+            <p v-if="requires_account" class="text-red-700 font-semibold mb-6">
+                Pour participer à cet événement collaboratif, la création d’un
+                compte est obligatoire.
+            </p>
+
             <div class="flex flex-col sm:flex-row justify-center gap-4">
                 <button
                     @click="registerAsUser"
@@ -63,13 +70,44 @@ function continueAsGuest() {
                     ✅ Oui, je veux m’inscrire
                 </button>
 
+                <!-- Visible seulement si l’inscription n’est pas obligatoire -->
                 <button
-                    v-if="status === 'accepted'"
+                    v-if="status === 'accepted' && !requires_account"
                     @click="continueAsGuest"
                     class="bg-indigo-400 hover:bg-indigo-500 text-blue-900 px-4 py-2 rounded-xl font-bold"
                 >
                     👀 Continuer sans compte
                 </button>
+                <!-- Visible dans tous les cas -->
+
+                <form :action="route('login')" method="GET" id="redirect-login">
+                    <input
+                        type="hidden"
+                        name="invitation_token"
+                        :value="invitation.token"
+                    />
+                    <button
+                        type="submit"
+                        form="redirect-login"
+                        class="bg-indigo-200 hover:bg-indigo-300 text-indigo-800 px-4 py-2 rounded-xl font-bold flex items-center gap-1"
+                    >
+                        🔐 Déjà membre ?
+                    </button>
+                </form>
+
+                <!-- Formulaire invisible lié au bouton ci-dessus -->
+                <form
+                    id="redirect-login"
+                    :action="route('login')"
+                    method="GET"
+                    class="hidden"
+                >
+                    <input
+                        type="hidden"
+                        name="invitation_token"
+                        :value="invitation.token"
+                    />
+                </form>
             </div>
         </div>
     </div>

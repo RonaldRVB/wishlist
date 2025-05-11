@@ -8,7 +8,7 @@ use Inertia\Inertia;
 use App\Models\Wishlist;
 use Illuminate\Support\Str;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
+use Illuminate\Support\Facades\Auth;
 
 
 class WishlistController extends Controller
@@ -26,12 +26,18 @@ class WishlistController extends Controller
 
     public function public(string $slug)
     {
-        $event = Event::where('slug', $slug)->with('wishlists.gifts')->firstOrFail();
+        $wishlist = Wishlist::where('slug', $slug)
+            ->with(['gifts', 'events']) // charge les events liés
+            ->firstOrFail();
+
+        $eventId = $wishlist->events->first()?->id ?? null; // si lié à plusieurs events, on prend le premier
 
         return Inertia::render('Wishlists/PublicShow', [
-            'event' => $event,
+            'wishlist' => $wishlist,
+            'eventId' => $eventId,
         ]);
     }
+
 
     public function edit(Wishlist $wishlist)
     {
@@ -50,17 +56,23 @@ class WishlistController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
+            'event_id' => 'nullable|exists:events,id',
         ]);
 
-        Wishlist::create([
+        $wishlist = Wishlist::create([
             'user_id' => auth()->id(),
             'title' => $validated['title'],
             'description' => $validated['description'],
-            'slug' => Str::slug($validated['title']) . '-' . uniqid(), // ✅ unique + lisible
+            'slug' => Str::slug($validated['title']) . '-' . uniqid(),
         ]);
+
+        if (!empty($validated['event_id'])) {
+            $wishlist->events()->attach($validated['event_id']);
+        }
 
         return redirect()->route('wishlists.index')->with('success', 'Wishlist créée avec succès.');
     }
+
 
     public function destroy(Wishlist $wishlist)
     {
@@ -111,20 +123,59 @@ class WishlistController extends Controller
     {
         $this->authorize('view', $wishlist);
 
-        $gifts = $wishlist->gifts()
-            ->select('gifts.id', 'gifts.name', 'gifts.description', 'gifts.image', 'gifts.purchase_url', 'gifts.is_reserved', 'gifts.reserved_by', 'gifts.reserved_at')
-            ->orderBy('gifts.name')
-            ->get();
+        $user = Auth::user();
 
         return Inertia::render('Wishlists/Show', [
-            'wishlist' => $wishlist,
-            'gifts' => $wishlist->gifts()->orderBy('name')->get(),
+            'wishlist' => $wishlist->load('events'),
+            'gifts' => $wishlist->gifts()
+                ->select('gifts.id', 'name', 'description', 'image', 'purchase_url', 'is_reserved', 'reserved_by', 'reserved_at')
+                ->orderBy('name')
+                ->get(),
+            'userEvents' => $user->events()->get(),
         ]);
     }
 
-    public function create()
+
+    public function create(Request $request)
     {
         $this->authorize('create', Wishlist::class);
-        return Inertia::render('Wishlists/Create');
+
+        $eventId = $request->query('event_id');
+
+        return Inertia::render('Wishlists/Create', [
+            'eventId' => $eventId,
+        ]);
+    }
+
+
+    public function attachEvent(Request $request, Wishlist $wishlist)
+    {
+        $request->validate([
+            'event_id' => 'required|exists:events,id',
+        ]);
+
+        // On interdit de lier la liste perso
+        if ($wishlist->title === 'Ma liste personnelle') {
+            return back()->with('error', 'Impossible de lier la liste personnelle à un événement.');
+        }
+
+        $wishlist->events()->syncWithoutDetaching([$request->event_id]);
+
+        return back()->with('success', 'Événement associé à la wishlist.');
+    }
+
+    public function detachEvent(Request $request, Wishlist $wishlist)
+    {
+        $request->validate([
+            'event_id' => 'required|exists:events,id',
+        ]);
+
+        if ($wishlist->title === 'Ma liste personnelle') {
+            return back()->with('error', 'Impossible de dissocier un événement de la liste personnelle.');
+        }
+
+        $wishlist->events()->detach($request->event_id);
+
+        return back()->with('success', 'Événement dissocié de la wishlist.');
     }
 }

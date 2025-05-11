@@ -15,6 +15,22 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\EventWishlistController;
 use App\Http\Controllers\GiftController;
 use App\Http\Controllers\Auth\RegisterViewController;
+use Illuminate\Http\Request;
+use App\Models\Event;
+use Illuminate\Support\Facades\Log;
+
+Route::get('/post-register-redirect', function () {
+    Log::info('🌀 Accès à la route post-register');
+
+    if (session()->has('force_redirect_after_register')) {
+        $url = session()->pull('force_redirect_after_register');
+        Log::info('✅ Redirection vers : ' . $url);
+        return redirect($url);
+    }
+
+    // Log::warning('⚠️ Aucune redirection en session → Dashboard');
+    // return redirect()->route('dashboard');
+})->name('post.register.redirect');
 
 Route::get('/register', [RegisterViewController::class, 'create'])
     ->middleware(['guest'])
@@ -99,6 +115,9 @@ Route::get('/events/{event}/invitations/edit', [InvitationController::class, 'ed
 Route::post('/invitations/multiple', [InvitationController::class, 'storeMultiple'])->name('invitations.storeMultiple');
 Route::delete('/invitations/{invitation}', [InvitationController::class, 'destroy'])->name('invitations.destroy');
 
+Route::post('/invitations/store-token', function (Request $request) {
+    session(['invitation_token' => $request->token]);
+})->name('invitations.storeTokenInSession');
 
 Route::post('/invitations/{event}/send', [InvitationController::class, 'send'])
     ->name('invitations.send');
@@ -125,6 +144,7 @@ Route::post('/participants/guest', [ParticipantController::class, 'storeGuest'])
 Route::get('/invitation/{token}/wishlists', [InvitationController::class, 'showWishlistsFromInvitation'])
     ->name('invitations.wishlists');
 
+Route::get('/events/{event}/wishlists', [EventController::class, 'showWishlists'])->name('wishlists.byEvent');
 
 // 1. Index général
 Route::get('/wishlists', [WishlistController::class, 'index'])->name('wishlists.index');
@@ -150,10 +170,8 @@ Route::get('/wishlists/{wishlist}', [WishlistController::class, 'show'])->name('
 // 8. Affichage d’une wishlist publique (slug unique)
 Route::get('/w/{slug}', [WishlistController::class, 'public'])->name('wishlists.public');
 
-
-Route::post('/events/{event}/wishlists', [EventWishlistController::class, 'store'])
-    ->name('events.wishlists.attach');
-
+Route::post('/wishlists/{wishlist}/events/attach', [WishlistController::class, 'attachEvent'])->name('wishlists.events.attach');
+Route::post('/wishlists/{wishlist}/events/detach', [WishlistController::class, 'detachEvent'])->name('wishlists.events.detach');
 
 Route::get('/gifts', [GiftController::class, 'index'])->name('gifts.index');
 Route::get('/gifts/create', [GiftController::class, 'create'])->name('gifts.create');
@@ -165,3 +183,20 @@ Route::post('/gifts/{gift}/wishlists/attach', [GiftController::class, 'attachWis
 Route::post('/gifts/{gift}/wishlists/detach', [GiftController::class, 'detachWishlist'])->name('gifts.wishlists.detach');
 Route::put('/gifts/{gift}/wishlists', [GiftController::class, 'updateWishlists'])->name('gifts.updateWishlists');
 Route::delete('/gifts/{gift}', [GiftController::class, 'destroy'])->name('gifts.destroy');
+
+
+Route::get('/invitations/{token}/accepted', [InvitationController::class, 'handleAcceptedInvitation'])
+    ->name('invitations.handle.accepted');
+
+Route::get('/mes-invitations', [InvitationController::class, 'myInvitations'])->name('invitations.mine');
+
+
+Route::get('/invitations/after-register/{event}', function (Event $event) {
+    // S’il n’y a qu’une wishlist liée
+    if ($event->wishlists->count() === 1) {
+        return redirect()->route('wishlists.public', ['slug' => $event->wishlists->first()->slug]);
+    }
+
+    // S’il y en a plusieurs → page de sélection
+    return redirect()->route('wishlists.byEvent', $event);
+})->name('invitations.redirectAfterRegister');

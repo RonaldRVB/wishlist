@@ -9,6 +9,9 @@ use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
 use App\Models\Wishlist;
 use Illuminate\Support\Str;
+use \App\Models\Participant;
+use Illuminate\Support\Facades\Log;
+use \App\Models\EventWishlist;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -26,7 +29,7 @@ class CreateNewUser implements CreatesNewUsers
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
             'salutation_id' => ['required', 'exists:salutations,id'],
-            // supprime 'terms' si tu n'en as pas besoin
+
         ])->validate();
 
         $user = User::create([
@@ -38,6 +41,23 @@ class CreateNewUser implements CreatesNewUsers
             'role' => 'user',
         ]);
 
+        if (session()->has('invitation_token')) {
+            $token = session()->get('invitation_token'); // on retire le token de la session
+            $invitation = \App\Models\Invitation::where('token', $token)->first();
+
+            if ($invitation?->event_id) {
+                Participant::create([
+                    'event_id' => $invitation->event_id,
+                    'invitation_id' => $invitation->id,
+                    'user_id' => $user->id,
+                    'name' => $user->name,
+                ]);
+
+                session()->put('redirect_to_event', $invitation->event_id);
+                Log::info('✅ redirect_to_event set', ['event_id' => $invitation->event_id]);
+            }
+        }
+
         Wishlist::create([
             'title' => 'Ma liste personnelle',
             'description' => 'Cette liste est votre espace personnel pour ajouter des idées de cadeaux à partager par la suite...
@@ -46,6 +66,17 @@ class CreateNewUser implements CreatesNewUsers
             'is_public' => false,
             'slug' => Str::slug('liste-de-' . $user->name) . '-' . uniqid(),
         ]);
+
+        if (isset($invitation) && $invitation->event_id) {
+            $wishlist = Wishlist::where('user_id', $user->id)->latest()->first(); // ou utilise celle que tu viens de créer
+            EventWishlist::create([
+                'event_id' => $invitation->event_id,
+                'wishlist_id' => $wishlist->id,
+            ]);
+        }
+
+
+        session()->put('force_redirect_after_register', route('invitations.redirectAfterRegister', ['event' => $invitation->event_id]));
 
         return $user;
     }

@@ -14,6 +14,9 @@ use App\Http\Controllers\InvitationController;
 use App\Services\ImageUploadService;
 use App\Models\Wishlist;
 use Illuminate\Support\Facades\File;
+use App\Models\Participant;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
 {
@@ -38,9 +41,11 @@ class EventController extends Controller
 
     public function create()
     {
-        $wishlists = Wishlist::where('user_id', auth()->id())->get();
+        $wishlists = Wishlist::where('user_id', auth()->id())
+            ->where('title', '!=', 'Ma liste personnelle')
+            ->get();
 
-        if ($wishlists->count() === 1 && $wishlists->first()->title === 'Ma liste personnelle') {
+        if ($wishlists->isEmpty()) {
             return redirect()->route('wishlists.index')
                 ->with('error', 'Vous devez d’abord créer une autre wishlist (autre que votre liste personnelle) avant de créer un événement.');
         }
@@ -49,8 +54,10 @@ class EventController extends Controller
 
         return Inertia::render('Events/Create', [
             'defaultImages' => $defaultImages,
+            'wishlists' => $wishlists,
         ]);
     }
+
 
     public function store(Request $request)
     {
@@ -71,7 +78,7 @@ class EventController extends Controller
         $validated['user_id'] = auth()->id();
         $validated['slug'] = Str::slug($validated['title']) . '-' . uniqid();
         $validated['status_event_id'] = 1;
-        $validated['is_collaborative'] = $request->boolean('is_collaborative');
+        $validated['is_collaborative'] = filter_var($request->input('is_collaborative'), FILTER_VALIDATE_BOOLEAN);
 
         if ($request->hasFile('custom_image')) {
             $validated['custom_image'] = ImageUploadService::uploadAndConvertToWebp(
@@ -82,6 +89,19 @@ class EventController extends Controller
         }
 
         $event = Event::create($validated);
+
+        // Ajout automatique du créateur comme participant
+        Participant::create([
+            'user_id' => auth()->id(),
+            'event_id' => $event->id,
+            'status' => 'accepted',
+            'name' => auth()->user()->name,
+        ]);
+
+        // 🧩 Lier une wishlist si une ID a été envoyée
+        if ($request->filled('wishlist_id')) {
+            $event->wishlists()->attach($request->input('wishlist_id'));
+        }
 
         if (!empty($validated['emails'])) {
             $emails = array_filter($validated['emails']); // Supprime les emails vides ou null
@@ -167,5 +187,22 @@ class EventController extends Controller
         $event->delete();
 
         return redirect()->route('events.index')->with('success', 'Événement supprimé.');
+    }
+
+    public function showWishlists(Event $event)
+    {
+        $user = auth()->user();
+
+        // Récupère les wishlists liées à l'événement avec leurs cadeaux et leurs auteurs
+        $wishlists = $event->wishlists()->with(['gifts', 'user'])->get();
+
+        // Vérifie si l'utilisateur connecté a déjà une wishlist liée à cet événement
+        $userWishlist = $wishlists->first(fn($w) => $w->user_id === $user->id);
+
+        return Inertia::render('Wishlists/IndexForEvent', [
+            'event' => $event,
+            'wishlists' => $wishlists,
+            'userWishlist' => $userWishlist,
+        ]);
     }
 }

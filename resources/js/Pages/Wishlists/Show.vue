@@ -1,13 +1,25 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { router } from "@inertiajs/vue3";
+import { ref } from "vue";
 
 defineOptions({ layout: AppLayout });
 
 const props = defineProps({
     wishlist: Object,
     gifts: Array,
+    userEvents: Array,
 });
+
+function toggleEvent(eventId, isChecked) {
+    const routeName = isChecked
+        ? "wishlists.events.attach"
+        : "wishlists.events.detach";
+
+    router.post(route(routeName, { wishlist: props.wishlist.id }), {
+        event_id: eventId,
+    });
+}
 </script>
 
 <template>
@@ -76,6 +88,38 @@ const props = defineProps({
                         class="text-xs text-white bg-green-500 px-3 py-1 rounded-full shadow-sm"
                     >
                         Réservé
+                    </div>
+                </div>
+            </div>
+            <!-- Événements liés -->
+            <div
+                class="mt-12 bg-[#E3EFFD] border border-blue-300 p-6 rounded-xl shadow-md"
+            >
+                <h2 class="text-xl font-bold text-blue-900 mb-4">
+                    Associer à des événements
+                </h2>
+
+                <div class="space-y-2">
+                    <div
+                        v-for="event in userEvents"
+                        :key="event.id"
+                        class="flex items-center space-x-2"
+                    >
+                        <input
+                            type="checkbox"
+                            :id="'event-' + event.id"
+                            :checked="
+                                wishlist.events.some((e) => e.id === event.id)
+                            "
+                            @change="
+                                toggleEvent(event.id, $event.target.checked)
+                            "
+                            class="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                        />
+
+                        <label :for="'event-' + event.id" class="text-gray-800">
+                            {{ event.title }}
+                        </label>
                     </div>
                 </div>
             </div>

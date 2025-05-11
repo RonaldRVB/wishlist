@@ -82,7 +82,9 @@ const baseUrl = window.location.origin;
                     <button
                         @click="
                             router.visit(
-                                route('invitations.create', { event: event.id })
+                                route('invitations.create', {
+                                    event: event.id,
+                                }),
                             )
                         "
                         class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-700"
@@ -93,7 +95,7 @@ const baseUrl = window.location.origin;
                     <button
                         @click="
                             router.visit(
-                                route('invitations.index', { event: event.id })
+                                route('invitations.index', { event: event.id }),
                             )
                         "
                         class="bg-teal-400 text-teal-900 font-semibold px-4 py-2 rounded-xl hover:bg-teal-500"
@@ -104,7 +106,7 @@ const baseUrl = window.location.origin;
                     <button
                         @click="
                             router.visit(
-                                route('invitations.edit', { event: event.id })
+                                route('invitations.edit', { event: event.id }),
                             )
                         "
                         class="bg-indigo-200 text-indigo-800 font-semibold px-4 py-2 rounded-xl hover:bg-indigo-300"
