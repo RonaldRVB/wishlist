@@ -16,13 +16,17 @@ class WishlistController extends Controller
     use AuthorizesRequests;
     public function index()
     {
-        $wishlists = Wishlist::where('user_id', auth()->id())->latest()->get();
+        $wishlists = Wishlist::with('events')
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->get();
 
         return Inertia::render('Wishlists/Index', [
             'wishlists' => $wishlists,
             'flashError' => session('error'),
         ]);
     }
+
 
     public function public(string $slug)
     {
@@ -46,10 +50,26 @@ class WishlistController extends Controller
             abort(403, 'Accès non autorisé.');
         }
 
+        $user = auth()->user();
+
+        // Tous les cadeaux (sans doublons) liés à ses wishlists
+        $allGifts = $user->wishlists()
+            ->with('gifts')
+            ->get()
+            ->flatMap(fn($w) => $w->gifts)
+            ->unique('id')
+            ->values();
+
+        // Liste des ID des cadeaux déjà associés à cette wishlist
+        $linkedGiftIds = $wishlist->gifts()->pluck('gifts.id')->toArray();
+
         return Inertia::render('Wishlists/Edit', [
             'wishlist' => $wishlist,
+            'allGifts' => $allGifts,
+            'linkedGiftIds' => $linkedGiftIds,
         ]);
     }
+
 
     public function store(Request $request)
     {
@@ -57,6 +77,8 @@ class WishlistController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
             'event_id' => 'nullable|exists:events,id',
+            'selectedGifts' => 'nullable|array',
+            'selectedGifts.*' => 'exists:gifts,id',
         ]);
 
         $wishlist = Wishlist::create([
@@ -70,8 +92,13 @@ class WishlistController extends Controller
             $wishlist->events()->attach($validated['event_id']);
         }
 
+        if (!empty($validated['selectedGifts'])) {
+            $wishlist->gifts()->syncWithoutDetaching($validated['selectedGifts']);
+        }
+
         return redirect()->route('wishlists.index')->with('success', 'Wishlist créée avec succès.');
     }
+
 
 
     public function destroy(Wishlist $wishlist)
@@ -96,28 +123,42 @@ class WishlistController extends Controller
 
     public function update(Request $request, Wishlist $wishlist)
     {
-        // Vérifie que l'utilisateur est bien le propriétaire
         if ($wishlist->user_id !== auth()->id()) {
             abort(403);
         }
 
-        // Protection spéciale : la wishlist personnelle ne peut être modifiée que partiellement
-        if ($wishlist->title === 'Ma liste personnelle') {
-            $request->validate([
-                'description' => ['nullable', 'string', 'max:255'],
-            ]);
-        } else {
-            $request->validate([
-                'description' => ['nullable', 'string', 'max:255'],
-            ]);
+        // Validation commune
+        $rules = [
+            'description' => ['nullable', 'string', 'max:255'],
+            'selectedGifts' => ['nullable', 'array'],
+            'selectedGifts.*' => ['exists:gifts,id'],
+        ];
+
+        // Si ce n'est pas la liste personnelle, on autorise aussi la modification du titre
+        if ($wishlist->title !== 'Ma liste personnelle') {
+            $rules['title'] = ['required', 'string', 'max:255'];
         }
 
-        $wishlist->update([
-            'description' => $request->description,
-        ]);
+        $validated = $request->validate($rules);
+
+        // Mise à jour des champs modifiables
+        if (isset($validated['title'])) {
+            $wishlist->title = $validated['title'];
+        }
+        $wishlist->description = $validated['description'];
+        $wishlist->save();
+
+        // Mise à jour des cadeaux liés
+        if ($request->filled('selectedGifts')) {
+            $wishlist->gifts()->sync($validated['selectedGifts']);
+        } else {
+            // Si aucun cadeau n’est coché, on vide la relation
+            $wishlist->gifts()->detach();
+        }
 
         return redirect()->route('wishlists.index')->with('success', 'Liste mise à jour.');
     }
+
 
     public function show(Wishlist $wishlist)
     {
@@ -141,11 +182,22 @@ class WishlistController extends Controller
         $this->authorize('create', Wishlist::class);
 
         $eventId = $request->query('event_id');
+        $user = auth()->user();
+
+        // Récupère tous les cadeaux de toutes les wishlists de l'utilisateur, sans doublons
+        $gifts = $user->wishlists()
+            ->with('gifts')
+            ->get()
+            ->flatMap(fn($wishlist) => $wishlist->gifts)
+            ->unique('id')
+            ->values(); // reset les clés
 
         return Inertia::render('Wishlists/Create', [
             'eventId' => $eventId,
+            'gifts' => $gifts,
         ]);
     }
+
 
 
     public function attachEvent(Request $request, Wishlist $wishlist)

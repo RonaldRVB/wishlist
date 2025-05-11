@@ -117,28 +117,32 @@ if (props.flashError) {
             >
                 <thead class="bg-teal-200 text-black">
                     <tr>
-                        <th class="text-left px-4 py-2">Nom</th>
-                        <th class="text-center px-4 py-2">Description</th>
-                        <th class="text-right px-4 py-2">Actions</th>
+                        <th class="w-1/4 text-left px-4 py-2">Nom</th>
+                        <th class="w-1/2 text-left px-4 py-2">Description</th>
+                        <th class="w-1/4 text-left px-4 py-2">
+                            Événements liés
+                        </th>
+                        <th class="w-1/6 text-right px-4 py-2">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <template v-for="wishlist in wishlists" :key="wishlist.id">
                     <tr
-                        v-for="wishlist in wishlists"
-                        :key="wishlist.id"
-                        class="border-t border-green-500 hover:bg-blue-50 transition"
+                        v-if="wishlist.title === 'Ma liste personnelle'"
+                        class="border-t border-green-500 bg-[#F2F8FF]"
                     >
-                        <!-- Titre -->
-                        <td class="px-4 py-2 font-bold text-blue-800 text-left">
+                        <td
+                            class="px-4 py-2 font-bold text-blue-800 whitespace-normal"
+                        >
                             {{ wishlist.title }}
                         </td>
 
-                        <!-- Description -->
-                        <td class="px-4 py-2 text-center text-gray-700">
-                            {{ wishlist.description || "—" }}
+                        <td
+                            colspan="2"
+                            class="px-4 py-2 text-gray-700 whitespace-normal"
+                        >
+                            {{ wishlist.description }}
                         </td>
 
-                        <!-- Actions -->
                         <td class="px-4 py-2 text-right">
                             <div class="flex justify-end space-x-4">
                                 <!-- Voir -->
@@ -152,7 +156,9 @@ if (props.flashError) {
                                         )
                                     "
                                     class="text-blue-700 hover:text-indigo-800"
+                                    title="Voir"
                                 >
+                                    <!-- œil -->
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         class="w-5 h-5"
@@ -160,9 +166,7 @@ if (props.flashError) {
                                         viewBox="0 0 24 24"
                                     >
                                         <path
-                                            d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 12c-2.761 0-5-2.239-5-5s2.239-5
-                      5-5 5 2.239 5 5-2.239 5-5 5zm0-8c-1.654 0-3 1.346-3 3s1.346 3 3 3
-                      3-1.346 3-3-1.346-3-3-3z"
+                                            d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 12c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5-2.239 5-5 5zm0-8c-1.654 0-3 1.346-3 3s1.346 3 3 3 3-1.346 3-3-1.346-3-3-3z"
                                         />
                                     </svg>
                                 </button>
@@ -171,7 +175,9 @@ if (props.flashError) {
                                 <button
                                     @click="editWishlist(wishlist)"
                                     class="text-blue-700 hover:text-red-400"
+                                    title="Modifier"
                                 >
+                                    <!-- crayon -->
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         class="w-5 h-5"
@@ -179,10 +185,7 @@ if (props.flashError) {
                                         viewBox="0 0 24 24"
                                     >
                                         <path
-                                            d="M3 17.25V21h3.75l11.065-11.065-3.75-3.75L3
-                      17.25zM21.41 6.34c.39-.39.39-1.02
-                      0-1.41l-2.34-2.34a1.003 1.003 0 0 0-1.42
-                      0l-1.83 1.83 3.75 3.75 1.84-1.83z"
+                                            d="M3 17.25V21h3.75l11.065-11.065-3.75-3.75L3 17.25zM21.41 6.34c.39-.39.39-1.02 0-1.41l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.83z"
                                         />
                                     </svg>
                                 </button>
@@ -191,6 +194,101 @@ if (props.flashError) {
                                 <button
                                     @click="openDeleteModal(wishlist)"
                                     class="text-blue-700 hover:text-[#F87171]"
+                                    title="Supprimer"
+                                >
+                                    <!-- poubelle -->
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="w-5 h-5"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+                                        />
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr
+                        v-else
+                        class="border-t border-green-500 hover:bg-blue-50 transition"
+                    >
+                        <td
+                            class="px-4 py-2 font-bold text-blue-800 whitespace-normal"
+                        >
+                            {{ wishlist.title }}
+                        </td>
+
+                        <td class="px-4 py-2 text-gray-700 whitespace-normal">
+                            {{ wishlist.description || "—" }}
+                        </td>
+
+                        <td class="px-4 py-2 text-gray-700 whitespace-normal">
+                            <template v-if="wishlist.events?.length">
+                                <span
+                                    v-for="event in wishlist.events"
+                                    :key="event.id"
+                                    class="block text-sm text-indigo-700"
+                                >
+                                    {{ event.title }}
+                                </span>
+                            </template>
+                            <template v-else> — </template>
+                        </td>
+
+                        <td class="px-4 py-2 text-right">
+                            <div class="flex justify-end space-x-4">
+                                <!-- Voir -->
+                                <button
+                                    @click="
+                                        router.visit(
+                                            route(
+                                                'wishlists.show',
+                                                wishlist.id,
+                                            ),
+                                        )
+                                    "
+                                    class="text-blue-700 hover:text-indigo-800"
+                                    title="Voir"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="w-5 h-5"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 12c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5-2.239 5-5 5zm0-8c-1.654 0-3 1.346-3 3s1.346 3 3 3 3-1.346 3-3-1.346-3-3-3z"
+                                        />
+                                    </svg>
+                                </button>
+
+                                <!-- Modifier -->
+                                <button
+                                    @click="editWishlist(wishlist)"
+                                    class="text-blue-700 hover:text-red-400"
+                                    title="Modifier"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="w-5 h-5"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M3 17.25V21h3.75l11.065-11.065-3.75-3.75L3 17.25zM21.41 6.34c.39-.39.39-1.02 0-1.41l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.83z"
+                                        />
+                                    </svg>
+                                </button>
+
+                                <!-- Supprimer -->
+                                <button
+                                    @click="openDeleteModal(wishlist)"
+                                    class="text-blue-700 hover:text-[#F87171]"
+                                    title="Supprimer"
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -206,7 +304,7 @@ if (props.flashError) {
                             </div>
                         </td>
                     </tr>
-                </tbody>
+                </template>
             </table>
         </div>
 

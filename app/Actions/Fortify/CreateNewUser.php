@@ -65,22 +65,23 @@ class CreateNewUser implements CreatesNewUsers
             }
         }
 
-        Wishlist::create([
+        $wishlist = Wishlist::create([
             'title' => 'Ma liste personnelle',
             'description' => 'Cette liste est votre espace personnel pour ajouter des idées de cadeaux à partager par la suite...
-             Ajoutez vos cadeaux personnels via le bouton \' Voir \' pour enrichir cette liste.',
+        Ajoutez vos cadeaux personnels via le bouton \' Voir \' pour enrichir cette liste.',
             'user_id' => $user->id,
             'is_public' => false,
             'slug' => Str::slug('liste-de-' . $user->name) . '-' . uniqid(),
         ]);
 
-        if (isset($invitation) && $invitation->event_id) {
-            $wishlist = Wishlist::where('user_id', $user->id)->latest()->first(); // ou utilise celle que tu viens de créer
+        // Ne pas associer la wishlist personnelle à un événement
+        if (isset($invitation) && $invitation->event_id && $wishlist->title !== 'Ma liste personnelle') {
             EventWishlist::create([
                 'event_id' => $invitation->event_id,
                 'wishlist_id' => $wishlist->id,
             ]);
         }
+
 
 
         session()->put('force_redirect_after_register', route('invitations.redirectAfterRegister', ['event' => $invitation->event_id]));

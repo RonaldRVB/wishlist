@@ -157,6 +157,12 @@ const submit = () => {
                             required
                         />
                     </div>
+                    <div
+                        v-if="form.errors.end_date"
+                        class="text-red-600 text-sm mt-1"
+                    >
+                        {{ form.errors.end_date }}
+                    </div>
 
                     <!-- Image personnalisée -->
 
@@ -203,6 +209,12 @@ const submit = () => {
                             v-model="form.end_date"
                             class="w-full rounded-lg border-gray-300 mt-1 shadow-sm"
                         />
+                    </div>
+                    <div
+                        v-if="form.errors.end_date"
+                        class="text-red-600 text-sm mt-1"
+                    >
+                        {{ form.errors.end_date }}
                     </div>
 
                     <div>
