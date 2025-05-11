@@ -28,10 +28,9 @@ Route::get('/post-register-redirect', function () {
         return redirect($url);
     }
 
-    Log::warning('⚠️ Aucune redirection en session → Dashboard');
-    return redirect()->route('dashboard');
+    // Log::warning('⚠️ Aucune redirection en session → Dashboard');
+    // return redirect()->route('dashboard');
 })->name('post.register.redirect');
-
 
 Route::get('/register', [RegisterViewController::class, 'create'])
     ->middleware(['guest'])
@@ -170,11 +169,6 @@ Route::get('/wishlists/{wishlist}', [WishlistController::class, 'show'])->name('
 // 8. Affichage d’une wishlist publique (slug unique)
 Route::get('/w/{slug}', [WishlistController::class, 'public'])->name('wishlists.public');
 
-
-Route::post('/events/{event}/wishlists', [EventWishlistController::class, 'store'])
-    ->name('events.wishlists.attach');
-
-
 Route::get('/gifts', [GiftController::class, 'index'])->name('gifts.index');
 Route::get('/gifts/create', [GiftController::class, 'create'])->name('gifts.create');
 Route::post('/gifts', [GiftController::class, 'store'])->name('gifts.store');
@@ -190,20 +184,15 @@ Route::delete('/gifts/{gift}', [GiftController::class, 'destroy'])->name('gifts.
 Route::get('/invitations/{token}/accepted', [InvitationController::class, 'handleAcceptedInvitation'])
     ->name('invitations.handle.accepted');
 
-Route::get('/wishlist/{slug}', [WishlistController::class, 'showPublic'])
-    ->name('wishlists.public.show');
-
+Route::get('/mes-invitations', [InvitationController::class, 'myInvitations'])->name('invitations.mine');
 
 
 Route::get('/invitations/after-register/{event}', function (Event $event) {
     // S’il n’y a qu’une wishlist liée
     if ($event->wishlists->count() === 1) {
-        return redirect()->route('wishlists.show', $event->wishlists->first());
+        return redirect()->route('wishlists.public', ['slug' => $event->wishlists->first()->slug]);
     }
 
     // S’il y en a plusieurs → page de sélection
     return redirect()->route('wishlists.byEvent', $event);
 })->name('invitations.redirectAfterRegister');
-
-Route::get('/events/{event}/wishlists', [EventController::class, 'showWishlists'])
-    ->name('wishlists.byEvent');

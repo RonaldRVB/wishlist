@@ -15,6 +15,7 @@ use App\Services\ImageUploadService;
 use App\Models\Wishlist;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
 {
@@ -177,15 +178,5 @@ class EventController extends Controller
         $event->delete();
 
         return redirect()->route('events.index')->with('success', 'Événement supprimé.');
-    }
-
-    public function showWishlists(Event $event)
-    {
-        $wishlists = $event->wishlists()->with('gifts')->get();
-
-        return Inertia::render('Wishlists/IndexForEvent', [
-            'event' => $event,
-            'wishlists' => $wishlists,
-        ]);
     }
 }

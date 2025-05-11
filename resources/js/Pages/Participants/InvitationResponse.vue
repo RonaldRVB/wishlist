@@ -78,6 +78,36 @@ function continueAsGuest() {
                 >
                     👀 Continuer sans compte
                 </button>
+                <!-- Visible dans tous les cas -->
+
+                <form :action="route('login')" method="GET" id="redirect-login">
+                    <input
+                        type="hidden"
+                        name="invitation_token"
+                        :value="invitation.token"
+                    />
+                    <button
+                        type="submit"
+                        form="redirect-login"
+                        class="bg-indigo-200 hover:bg-indigo-300 text-indigo-800 px-4 py-2 rounded-xl font-bold flex items-center gap-1"
+                    >
+                        🔐 Déjà membre ?
+                    </button>
+                </form>
+
+                <!-- Formulaire invisible lié au bouton ci-dessus -->
+                <form
+                    id="redirect-login"
+                    :action="route('login')"
+                    method="GET"
+                    class="hidden"
+                >
+                    <input
+                        type="hidden"
+                        name="invitation_token"
+                        :value="invitation.token"
+                    />
+                </form>
             </div>
         </div>
     </div>

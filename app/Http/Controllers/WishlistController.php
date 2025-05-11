@@ -26,12 +26,18 @@ class WishlistController extends Controller
 
     public function public(string $slug)
     {
-        $event = Event::where('slug', $slug)->with('wishlists.gifts')->firstOrFail();
+        $wishlist = Wishlist::where('slug', $slug)
+            ->with(['gifts', 'events']) // charge les events liés
+            ->firstOrFail();
+
+        $eventId = $wishlist->events->first()?->id ?? null; // si lié à plusieurs events, on prend le premier
 
         return Inertia::render('Wishlists/PublicShow', [
-            'event' => $event,
+            'wishlist' => $wishlist,
+            'eventId' => $eventId,
         ]);
     }
+
 
     public function edit(Wishlist $wishlist)
     {
