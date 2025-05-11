@@ -24,7 +24,7 @@ const props = defineProps({
                 <li
                     v-for="participation in participations"
                     :key="participation.id"
-                    class="bg-white p-4 rounded-xl shadow flex justify-between items-center"
+                    class="bg-[#E3EFFD] border border-blue-300 p-4 rounded-xl shadow flex justify-between items-center"
                 >
                     <div>
                         <p class="text-blue-800 font-semibold">

@@ -197,10 +197,10 @@ class EventController extends Controller
         $wishlists = $event->wishlists()
             ->with(['gifts', 'user'])
             ->get()
-            // 🔴 On filtre pour exclure la wishlist personnelle
+            // On filtre pour exclure la wishlist personnelle
             ->reject(fn($w) => $w->title === 'Ma liste personnelle');
 
-        // 🔎 On détecte si l'utilisateur connecté a une wishlist pour cet événement (pas la perso)
+        // On détecte si l'utilisateur connecté a une wishlist pour cet événement (pas la perso)
         $userWishlist = $wishlists->first(fn($w) => $w->user_id === $user->id);
 
         return Inertia::render('Wishlists/IndexForEvent', [

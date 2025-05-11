@@ -6,24 +6,24 @@ defineOptions({ layout: AppLayout });
 
 const props = defineProps({
     eventId: [String, Number, null],
+    gifts: {
+        type: Array,
+        default: () => [],
+    },
 });
 
 const form = useForm({
     title: "",
     description: "",
     event_id: props.eventId,
+    selectedGifts: [], // ✅ cadeaux cochés
 });
 
 function submit() {
-    // console.log('Form data :', form)
     form.post(route("wishlists.store"), {
         preserveScroll: true,
         onSuccess: () => {
-            // console.log('Succès !')
             form.reset();
-        },
-        onError: () => {
-            // console.log('Erreur détectée !', form.errors)
         },
     });
 }
@@ -43,6 +43,7 @@ function submit() {
             </h1>
 
             <form @submit.prevent="submit" class="space-y-4">
+                <!-- Titre -->
                 <div>
                     <label class="block font-semibold text-blue-800 mb-1"
                         >Titre de la wishlist</label
@@ -58,6 +59,7 @@ function submit() {
                     </div>
                 </div>
 
+                <!-- Description -->
                 <div>
                     <label class="block font-semibold text-blue-800 mb-1"
                         >Description</label
@@ -75,6 +77,47 @@ function submit() {
                     </div>
                 </div>
 
+                <!-- Ajout de cadeaux existants -->
+                <div>
+                    <label class="block font-semibold text-blue-800 mb-1"
+                        >Ajouter des cadeaux existants</label
+                    >
+
+                    <div
+                        v-if="props.gifts.length > 0"
+                        class="max-h-48 overflow-auto space-y-2 p-2 bg-white border rounded"
+                    >
+                        <label
+                            v-for="gift in props.gifts"
+                            :key="gift.id"
+                            class="flex items-center gap-3 text-blue-900"
+                        >
+                            <input
+                                type="checkbox"
+                                :value="gift.id"
+                                v-model="form.selectedGifts"
+                                class="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                            />
+
+                            <!-- Miniature -->
+                            <img
+                                v-if="gift.image"
+                                :src="'/storage/' + gift.image"
+                                alt="Image du cadeau"
+                                class="w-10 h-10 object-cover rounded"
+                            />
+
+                            <!-- Nom du cadeau -->
+                            <span>{{ gift.name }}</span>
+                        </label>
+                    </div>
+
+                    <div v-else class="text-sm italic text-gray-600 mt-1">
+                        Aucun cadeau existant à proposer.
+                    </div>
+                </div>
+
+                <!-- Bouton -->
                 <div class="flex justify-end">
                     <button
                         type="submit"

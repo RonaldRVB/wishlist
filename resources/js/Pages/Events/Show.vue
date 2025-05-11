@@ -65,10 +65,10 @@ const baseUrl = window.location.origin;
                     {{ new Date(event.end_date).toLocaleDateString("fr-FR") }}
                 </p>
 
-                <p class="mb-2 pl-5">
+                <!-- <p class="mb-2 pl-5">
                     <span class="font-semibold text-blue-900">URL :</span>
                     {{ baseUrl + "/events/" + event.slug }}
-                </p>
+                </p> -->
 
                 <p class="mb-2">
                     <span class="font-semibold text-blue-900 pl-5"

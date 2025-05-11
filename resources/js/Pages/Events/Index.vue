@@ -178,6 +178,31 @@ function closeModal() {
                         </tr>
                     </tbody>
                 </table>
+
+                <!-- Message si aucun événement -->
+                <div
+                    v-if="events.length === 0"
+                    class="p-6 text-center text-blue-800 font-semibold"
+                >
+                    Tu n’as encore créé aucun événement.
+                    <p class="text-sm text-gray-600 mt-2">
+                        Cette page est réservée aux événements que
+                        <strong>tu as créés</strong>.<br />
+                        Si tu as été invité à un événement, tu peux les
+                        consulter dans
+                        <strong>
+                            <a
+                                @click.prevent="
+                                    router.visit(route('invitations.mine'))
+                                "
+                                href="#"
+                                class="text-blue-700 underline hover:text-blue-900 font-bold"
+                            >
+                                « Mes invitations »</a
+                            ></strong
+                        >.
+                    </p>
+                </div>
             </div>
         </div>
 

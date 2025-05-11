@@ -93,6 +93,7 @@ function toggleEvent(eventId, isChecked) {
             </div>
             <!-- Événements liés -->
             <div
+                v-if="wishlist.title !== 'Ma liste personnelle'"
                 class="mt-12 bg-[#E3EFFD] border border-blue-300 p-6 rounded-xl shadow-md"
             >
                 <h2 class="text-xl font-bold text-blue-900 mb-4">
