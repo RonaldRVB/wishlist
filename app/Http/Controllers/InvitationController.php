@@ -177,13 +177,13 @@ class InvitationController extends Controller
             $invitation = Invitation::where('token', $token)->first();
 
             if ($invitation && ($invitation->email === $user->email)) {
-                $alreadyParticipant = \App\Models\Participant::where([
+                $alreadyParticipant = Participant::where([
                     ['event_id', '=', $invitation->event_id],
                     ['user_id', '=', $user->id],
                 ])->exists();
 
                 if (! $alreadyParticipant) {
-                    \App\Models\Participant::create([
+                    Participant::create([
                         'event_id' => $invitation->event_id,
                         'invitation_id' => $invitation->id,
                         'user_id' => $user->id,

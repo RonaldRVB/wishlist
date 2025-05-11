@@ -45,6 +45,13 @@ class CreateNewUser implements CreatesNewUsers
             $token = session()->get('invitation_token'); // on retire le token de la session
             $invitation = \App\Models\Invitation::where('token', $token)->first();
 
+            // 🔒 Vérifie que l’email de l’invitation correspond bien à celui fourni
+            if ($invitation && $invitation->email !== $input['email']) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'email' => ['Cette adresse ne correspond à aucune invitation valide.'],
+                ]);
+            }
+
             if ($invitation?->event_id) {
                 Participant::create([
                     'event_id' => $invitation->event_id,
