@@ -1,12 +1,11 @@
 <script setup>
 import { router } from "@inertiajs/vue3";
-import { ref } from "vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 
 defineOptions({ layout: AppLayout });
 
 const props = defineProps({
-    invitations: Array,
+    participations: Array, // ✅ nouveau nom
 });
 </script>
 
@@ -23,16 +22,16 @@ const props = defineProps({
 
             <ul class="space-y-4">
                 <li
-                    v-for="invitation in invitations"
-                    :key="invitation.id"
+                    v-for="participation in participations"
+                    :key="participation.id"
                     class="bg-white p-4 rounded-xl shadow flex justify-between items-center"
                 >
                     <div>
                         <p class="text-blue-800 font-semibold">
-                            Événement : {{ invitation.event.title }}
+                            Événement : {{ participation.event.title }}
                         </p>
                         <p class="text-gray-600 text-sm">
-                            Date : {{ invitation.event.event_date }}
+                            Date : {{ participation.event.event_date }}
                         </p>
                     </div>
 
@@ -40,7 +39,7 @@ const props = defineProps({
                         @click="
                             router.visit(
                                 route('wishlists.byEvent', {
-                                    event: invitation.event.id,
+                                    event: participation.event.id,
                                 }),
                             )
                         "

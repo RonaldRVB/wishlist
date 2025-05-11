@@ -249,13 +249,12 @@ class InvitationController extends Controller
     {
         $user = auth()->user();
 
-        $invitations = Invitation::with('event.wishlists')
-            ->where('email', $user->email)
-            ->orWhereHas('participant', fn($q) => $q->where('user_id', $user->id))
+        $participations = Participant::with('event.wishlists')
+            ->where('user_id', $user->id)
             ->get();
 
         return Inertia::render('Invitations/MyInvitations', [
-            'invitations' => $invitations,
+            'participations' => $participations,
         ]);
     }
 }

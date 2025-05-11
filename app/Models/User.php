@@ -12,6 +12,12 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\Salutation;
 use App\Enums\UserRole;
 
+
+/**
+ * @property \Illuminate\Database\Eloquent\Collection|\App\Models\Event[] $events
+ * @method \Illuminate\Database\Eloquent\Relations\HasMany events()
+ */
+
 class User extends Authenticatable
 {
     protected $casts = [

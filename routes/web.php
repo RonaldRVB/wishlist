@@ -144,6 +144,7 @@ Route::post('/participants/guest', [ParticipantController::class, 'storeGuest'])
 Route::get('/invitation/{token}/wishlists', [InvitationController::class, 'showWishlistsFromInvitation'])
     ->name('invitations.wishlists');
 
+Route::get('/events/{event}/wishlists', [EventController::class, 'showWishlists'])->name('wishlists.byEvent');
 
 // 1. Index général
 Route::get('/wishlists', [WishlistController::class, 'index'])->name('wishlists.index');
@@ -168,6 +169,9 @@ Route::get('/wishlists/{wishlist}', [WishlistController::class, 'show'])->name('
 
 // 8. Affichage d’une wishlist publique (slug unique)
 Route::get('/w/{slug}', [WishlistController::class, 'public'])->name('wishlists.public');
+
+Route::post('/wishlists/{wishlist}/events/attach', [WishlistController::class, 'attachEvent'])->name('wishlists.events.attach');
+Route::post('/wishlists/{wishlist}/events/detach', [WishlistController::class, 'detachEvent'])->name('wishlists.events.detach');
 
 Route::get('/gifts', [GiftController::class, 'index'])->name('gifts.index');
 Route::get('/gifts/create', [GiftController::class, 'create'])->name('gifts.create');

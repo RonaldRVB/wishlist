@@ -88,13 +88,24 @@ if (props.flashError) {
         <div class="max-w-5xl w-full">
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-3xl font-bold text-blue-900">Mes wishlists</h1>
-                <button
-                    @click="createNewWishlist"
-                    class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-700"
-                >
-                    + Nouvelle liste
-                </button>
+
+                <div class="flex gap-4">
+                    <button
+                        @click="createNewWishlist"
+                        class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-700"
+                    >
+                        + Nouvelle liste
+                    </button>
+
+                    <button
+                        @click="router.visit(route('events.create'))"
+                        class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-700"
+                    >
+                        + Nouvel événement
+                    </button>
+                </div>
             </div>
+
             <div
                 v-if="flashError"
                 class="mb-4 p-4 bg-red-200 text-red-800 rounded-lg shadow"

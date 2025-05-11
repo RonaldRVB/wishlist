@@ -32,10 +32,15 @@ function createWishlistForEvent() {
                 <li
                     v-for="wishlist in wishlists"
                     :key="wishlist.id"
-                    class="bg-white rounded-xl border border-blue-300 p-4 shadow flex justify-between items-center"
+                    :class="[
+                        'p-4 rounded-xl shadow flex justify-between items-center',
+                        wishlist.user.id === event.user_id
+                            ? 'bg-teal-100 border border-teal-400'
+                            : 'bg-white border border-blue-300',
+                    ]"
                 >
                     <div class="font-semibold text-blue-800">
-                        {{ wishlist.title }}
+                        Liste de : {{ wishlist.user.name }}
                     </div>
                     <button
                         @click="goToWishlist(wishlist.slug)"

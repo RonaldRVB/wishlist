@@ -14,6 +14,7 @@ use App\Http\Controllers\InvitationController;
 use App\Services\ImageUploadService;
 use App\Models\Wishlist;
 use Illuminate\Support\Facades\File;
+use App\Models\Participant;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -88,6 +89,14 @@ class EventController extends Controller
         }
 
         $event = Event::create($validated);
+
+        // Ajout automatique du créateur comme participant
+        Participant::create([
+            'user_id' => auth()->id(),
+            'event_id' => $event->id,
+            'status' => 'accepted',
+            'name' => auth()->user()->name,
+        ]);
 
         // 🧩 Lier une wishlist si une ID a été envoyée
         if ($request->filled('wishlist_id')) {
@@ -178,5 +187,22 @@ class EventController extends Controller
         $event->delete();
 
         return redirect()->route('events.index')->with('success', 'Événement supprimé.');
+    }
+
+    public function showWishlists(Event $event)
+    {
+        $user = auth()->user();
+
+        // Récupère les wishlists liées à l'événement avec leurs cadeaux et leurs auteurs
+        $wishlists = $event->wishlists()->with(['gifts', 'user'])->get();
+
+        // Vérifie si l'utilisateur connecté a déjà une wishlist liée à cet événement
+        $userWishlist = $wishlists->first(fn($w) => $w->user_id === $user->id);
+
+        return Inertia::render('Wishlists/IndexForEvent', [
+            'event' => $event,
+            'wishlists' => $wishlists,
+            'userWishlist' => $userWishlist,
+        ]);
     }
 }
