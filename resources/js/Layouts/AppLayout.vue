@@ -99,7 +99,8 @@ watch(
                     class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
                     :class="{
                         'bg-[#2DD4BF] text-blue-800':
-                            route().current('wishlists.*'),
+                            route().current('wishlists.*') &&
+                            !route().current('wishlists.byEvent'),
                     }"
                     @click="handleNavigation('wishlists.index')"
                 >
@@ -110,7 +111,10 @@ watch(
                     class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
                     :class="{
                         'bg-[#2DD4BF] text-blue-800':
-                            route().current('gifts.index'),
+                            route().current('gifts.index') ||
+                            route().current('gifts.create') ||
+                            route().current('gifts.edit') ||
+                            route().current('gifts.show'),
                     }"
                     @click="handleNavigation('gifts.index')"
                 >
@@ -133,7 +137,8 @@ watch(
                     class="text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
                     :class="{
                         'bg-[#2DD4BF] text-blue-800':
-                            route().current('invitations.mine'),
+                            route().current('invitations.mine') ||
+                            route().current('wishlists.byEvent'),
                     }"
                     @click="router.visit(route('invitations.mine'))"
                 >

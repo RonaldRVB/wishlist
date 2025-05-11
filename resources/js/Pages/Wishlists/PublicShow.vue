@@ -27,9 +27,9 @@ const reserveGift = (giftId) => {
                 <h1 class="text-3xl font-bold text-blue-900">
                     Liste publique – {{ wishlist.title }}
                 </h1>
-                <p class="text-sm text-gray-500">
+                <!-- <p class="text-sm text-gray-500">
                     ID de l'événement : {{ eventId }}
-                </p>
+                </p> -->
                 <button
                     v-if="eventId"
                     @click="
