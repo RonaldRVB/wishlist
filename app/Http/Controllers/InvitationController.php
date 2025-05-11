@@ -177,12 +177,12 @@ class InvitationController extends Controller
         if (auth()->check()) {
             $user = auth()->user();
 
-            // Vérification stricte de l'email (sans trim, sans strtolower pour éviter les surprises)
+            // Vérification stricte de l'email associé à l'invitation
             if (trim($invitation->email) !== trim($user->email)) {
                 abort(403, 'Cette invitation ne correspond pas à votre compte.');
             }
 
-            // Vérifie si ce user est déjà participant
+            // Vérifie si l'utilisateur est déjà participant
             $alreadyParticipant = Participant::where([
                 ['event_id', '=', $invitation->event_id],
                 ['user_id', '=', $user->id],
@@ -200,16 +200,13 @@ class InvitationController extends Controller
             return redirect()->route('wishlists.byEvent', ['event' => $invitation->event_id]);
         }
 
-        // Pas connecté : on affiche la vue explicative
+        // Cas non connecté : affiche la vue explicative
         return Inertia::render('Participants/InvitationResponse', [
             'invitation' => $invitation,
             'status' => 'accepted',
             'requires_account' => $invitation->event->is_collaborative,
         ]);
     }
-
-
-
 
     public function refuse(string $token)
     {
