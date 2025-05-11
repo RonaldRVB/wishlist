@@ -24,34 +24,71 @@ function createWishlistForEvent() {
         class="w-full min-h-screen bg-[#D6E9FC] py-10 px-6 flex flex-col items-center"
     >
         <div class="not-prose max-w-4xl w-full space-y-6">
-            <h1 class="text-3xl font-bold text-blue-900">
-                Wishlists pour l'événement : {{ event.title }}
-            </h1>
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-blue-900">
+                    Wishlists pour l'événement : {{ event.title }}
+                </h1>
 
-            <ul class="space-y-2">
-                <li
-                    v-for="wishlist in wishlists"
-                    :key="wishlist.id"
-                    :class="[
-                        'p-4 rounded-xl shadow flex justify-between items-center',
-                        wishlist.user.id === event.user_id
-                            ? 'bg-teal-100 border border-teal-400'
-                            : 'bg-white border border-blue-300',
-                    ]"
+                <button
+                    @click="router.visit(route('invitations.mine'))"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-xl"
                 >
-                    <div class="font-semibold text-blue-800">
-                        Liste de : {{ wishlist.user.name }}
-                    </div>
-                    <button
-                        @click="goToWishlist(wishlist.slug)"
-                        class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-xl"
-                    >
-                        Voir
-                    </button>
-                </li>
-            </ul>
+                    Retour à mes invitations
+                </button>
+            </div>
 
-            <div v-if="userWishlist === null" class="text-center mt-8">
+            <li
+                v-for="wishlist in wishlists"
+                :key="wishlist.id"
+                class="flex items-center justify-between border rounded-xl p-4 shadow space-x-6 overflow-x-auto"
+                :class="
+                    wishlist.user.id === event.user_id
+                        ? 'bg-teal-100 border-teal-400'
+                        : 'bg-white border-blue-300'
+                "
+            >
+                <!-- Image de l'événement -->
+                <img
+                    :src="
+                        event.custom_image
+                            ? '/storage/' + event.custom_image
+                            : '/images/default-event.webp'
+                    "
+                    alt="Miniature"
+                    class="w-16 h-16 rounded-lg object-cover shrink-0"
+                />
+
+                <!-- Nom utilisateur -->
+                <p class="font-bold text-blue-900 whitespace-nowrap">
+                    {{ wishlist.user.name }}
+                </p>
+
+                <!-- Texte -->
+                <p class="text-sm italic text-blue-700 whitespace-nowrap">
+                    a partagé une wishlist
+                </p>
+
+                <!-- Titre de la liste -->
+                <p
+                    class="text-sm text-gray-800 font-semibold whitespace-nowrap"
+                >
+                    "{{ wishlist.title }}"
+                </p>
+
+                <!-- Bouton -->
+                <button
+                    @click="goToWishlist(wishlist.slug)"
+                    class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-xl whitespace-nowrap"
+                >
+                    Voir
+                </button>
+            </li>
+
+            <!-- ✅ Bloc 1 : création possible -->
+            <div
+                v-if="userWishlist === null && event.is_collaborative"
+                class="text-center mt-8"
+            >
                 <p class="text-blue-800 mb-4 font-semibold">
                     Tu n’as pas encore créé ta wishlist pour cet événement.
                 </p>
@@ -63,7 +100,8 @@ function createWishlistForEvent() {
                 </button>
             </div>
 
-            <div v-else class="text-center mt-8">
+            <!-- ✅ Bloc 2 : l'utilisateur a déjà une wishlist -->
+            <div v-if="userWishlist !== null" class="text-center mt-8">
                 <p class="text-blue-800 mb-4">
                     Tu as déjà une wishlist liée à cet événement.
                 </p>

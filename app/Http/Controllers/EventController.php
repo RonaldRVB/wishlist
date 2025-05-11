@@ -193,15 +193,19 @@ class EventController extends Controller
     {
         $user = auth()->user();
 
-        // Récupère les wishlists liées à l'événement avec leurs cadeaux et leurs auteurs
-        $wishlists = $event->wishlists()->with(['gifts', 'user'])->get();
+        // On récupère toutes les wishlists liées à l’événement
+        $wishlists = $event->wishlists()
+            ->with(['gifts', 'user'])
+            ->get()
+            // 🔴 On filtre pour exclure la wishlist personnelle
+            ->reject(fn($w) => $w->title === 'Ma liste personnelle');
 
-        // Vérifie si l'utilisateur connecté a déjà une wishlist liée à cet événement
+        // 🔎 On détecte si l'utilisateur connecté a une wishlist pour cet événement (pas la perso)
         $userWishlist = $wishlists->first(fn($w) => $w->user_id === $user->id);
 
         return Inertia::render('Wishlists/IndexForEvent', [
             'event' => $event,
-            'wishlists' => $wishlists,
+            'wishlists' => $wishlists->values(), // reset des clés si besoin
             'userWishlist' => $userWishlist,
         ]);
     }
