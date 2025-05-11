@@ -172,41 +172,43 @@ class InvitationController extends Controller
 
     public function accept(string $token)
     {
-        if (auth()->check()) {
-            $user = auth()->user();
-            $invitation = Invitation::where('token', $token)->first();
-
-            if ($invitation && ($invitation->email === $user->email)) {
-                $alreadyParticipant = \App\Models\Participant::where([
-                    ['event_id', '=', $invitation->event_id],
-                    ['user_id', '=', $user->id],
-                ])->exists();
-
-                if (! $alreadyParticipant) {
-                    \App\Models\Participant::create([
-                        'event_id' => $invitation->event_id,
-                        'invitation_id' => $invitation->id,
-                        'user_id' => $user->id,
-                        'name' => $user->name,
-                    ]);
-                }
-
-                return redirect()->route('wishlists.byEvent', ['event' => $invitation->event_id]);
-            }
-
-            // Si l’email ne correspond pas à l’utilisateur connecté
-            abort(403, 'Cette invitation ne correspond pas à votre compte.');
-        }
-
-        // Cas classique : utilisateur non connecté
         $invitation = Invitation::where('token', $token)->with('event')->firstOrFail();
 
+        if (auth()->check()) {
+            $user = auth()->user();
+
+            // Vérification stricte de l'email (sans trim, sans strtolower pour éviter les surprises)
+            if (trim($invitation->email) !== trim($user->email)) {
+                abort(403, 'Cette invitation ne correspond pas à votre compte.');
+            }
+
+            // Vérifie si ce user est déjà participant
+            $alreadyParticipant = Participant::where([
+                ['event_id', '=', $invitation->event_id],
+                ['user_id', '=', $user->id],
+            ])->exists();
+
+            if (! $alreadyParticipant) {
+                Participant::create([
+                    'event_id' => $invitation->event_id,
+                    'invitation_id' => $invitation->id,
+                    'user_id' => $user->id,
+                    'name' => $user->name,
+                ]);
+            }
+
+            return redirect()->route('wishlists.byEvent', ['event' => $invitation->event_id]);
+        }
+
+        // Pas connecté : on affiche la vue explicative
         return Inertia::render('Participants/InvitationResponse', [
             'invitation' => $invitation,
             'status' => 'accepted',
             'requires_account' => $invitation->event->is_collaborative,
         ]);
     }
+
+
 
 
     public function refuse(string $token)
