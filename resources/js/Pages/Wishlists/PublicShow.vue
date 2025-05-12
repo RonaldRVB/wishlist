@@ -16,7 +16,35 @@ const page = usePage();
 const user = page.props.auth.user;
 
 const reserveGift = (giftId) => {
-    console.log("Réservation demandée pour le cadeau ID :", giftId);
+    router.post(
+        route("gifts.reserve", { gift: giftId }),
+        {},
+        {
+            onSuccess: () => {
+                router.reload();
+                console.log("Réservation réussie !");
+            },
+            onError: () => {
+                console.warn("Erreur lors de la réservation.");
+            },
+        },
+    );
+};
+
+const cancelReservation = (giftId) => {
+    router.post(
+        route("gifts.cancelReservation", { gift: giftId }),
+        {},
+        {
+            onSuccess: () => {
+                router.reload();
+                console.log("Réservation annulée");
+            },
+            onError: () => {
+                console.warn("Échec de l’annulation");
+            },
+        },
+    );
 };
 </script>
 
@@ -63,6 +91,7 @@ const reserveGift = (giftId) => {
                     :key="gift.id"
                     class="bg-[#E3EFFD] border border-blue-300 p-4 rounded-2xl shadow-sm flex flex-col items-center"
                 >
+                    {{ console.log(gift.name, gift.is_reserved) }}
                     <img
                         v-if="gift.image"
                         :src="`/storage/${gift.image}`"
@@ -89,17 +118,32 @@ const reserveGift = (giftId) => {
                         Voir le produit
                     </a>
 
+                    <!-- Badge si déjà réservé par quelqu’un d’autre -->
                     <div
-                        v-if="gift.is_reserved"
-                        class="text-xs text-white bg-green-500 px-3 py-1 rounded-full shadow-sm"
+                        v-if="gift.is_reserved && gift.reserved_by !== user?.id"
+                        class="text-xs text-white bg-red-500 px-3 py-1 rounded-full shadow-sm"
                     >
                         Réservé
                     </div>
 
+                    <!-- Si réservé par moi → bouton pour annuler -->
                     <button
-                        v-else-if="user"
-                        class="text-xs text-white bg-teal-600 hover:bg-teal-700 px-3 py-1 rounded-full shadow-sm"
+                        v-else-if="
+                            gift.is_reserved &&
+                            user &&
+                            gift.reserved_by === user.id
+                        "
+                        @click="cancelReservation(gift.id)"
+                        class="text-xs text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-full shadow-sm"
+                    >
+                        Annuler réservation
+                    </button>
+
+                    <!-- Si non réservé → bouton pour réserver -->
+                    <button
+                        v-else-if="user && user.id !== wishlist.user_id"
                         @click="reserveGift(gift.id)"
+                        class="text-xs text-white bg-teal-600 hover:bg-teal-700 px-3 py-1 rounded-full shadow-sm"
                     >
                         Réserver ce cadeau
                     </button>

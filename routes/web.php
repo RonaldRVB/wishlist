@@ -15,6 +15,7 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\EventWishlistController;
 use App\Http\Controllers\GiftController;
 use App\Http\Controllers\Auth\RegisterViewController;
+use App\Http\Controllers\GiftReservationController;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use Illuminate\Support\Facades\Log;
@@ -183,6 +184,8 @@ Route::post('/gifts/{gift}/wishlists/attach', [GiftController::class, 'attachWis
 Route::post('/gifts/{gift}/wishlists/detach', [GiftController::class, 'detachWishlist'])->name('gifts.wishlists.detach');
 Route::put('/gifts/{gift}/wishlists', [GiftController::class, 'updateWishlists'])->name('gifts.updateWishlists');
 Route::delete('/gifts/{gift}', [GiftController::class, 'destroy'])->name('gifts.destroy');
+Route::post('/gifts/{gift}/reserve', [GiftReservationController::class, 'reserve'])->name('gifts.reserve');
+Route::post('/gifts/{gift}/cancel', [GiftReservationController::class, 'cancelReservation'])->name('gifts.cancelReservation');
 
 
 Route::get('/invitations/{token}/accepted', [InvitationController::class, 'handleAcceptedInvitation'])
