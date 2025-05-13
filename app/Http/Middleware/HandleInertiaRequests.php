@@ -38,6 +38,12 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'invitation_token' => fn() => session('invitation_token'),
+
+            'flash' => [
+                'success' => fn() => $request->session()->get('success'),
+                'error' => fn() => $request->session()->get('error'),
+            ],
+
         ]);
     }
 }
