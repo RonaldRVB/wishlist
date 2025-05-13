@@ -208,3 +208,5 @@ Route::get('/invitations/after-register/{event}', function (Event $event) {
 
 Route::get('/draw', [DrawController::class, 'index'])->name('draw.index');
 Route::post('/draw', [DrawController::class, 'store'])->name('draw.store');
+Route::get('/events/{event}/draw/test', [DrawController::class, 'drawFromInvitations'])->name('draw.fromInvitations');
+Route::get('/events/{event}/draw/final', [DrawController::class, 'drawFromParticipants'])->name('draw.fromParticipants');

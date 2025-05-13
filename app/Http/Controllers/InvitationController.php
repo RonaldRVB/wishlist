@@ -192,13 +192,16 @@ class InvitationController extends Controller
             ])->exists();
 
             if (! $alreadyParticipant) {
-                Participant::create([
+                $participant = Participant::create([
                     'event_id' => $invitation->event_id,
                     'invitation_id' => $invitation->id,
                     'user_id' => $user->id,
                     'name' => $user->name,
                 ]);
             }
+
+            $invitation->participant_id = $participant->id;
+            $invitation->save();
 
             return redirect()->route('wishlists.byEvent', ['event' => $invitation->event_id]);
         }
