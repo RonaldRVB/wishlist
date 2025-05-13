@@ -11,6 +11,9 @@ class Invitation extends Model
         'email',
         'token',
         'participant_id', // si tu fais aussi un assign sur la relation
+        'status_invitation_id',
+        'responded_at',
+
     ];
 
     public function event()

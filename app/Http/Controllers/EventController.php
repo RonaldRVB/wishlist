@@ -36,6 +36,7 @@ class EventController extends Controller
     {
         return Inertia::render('Events/Show', [
             'event' => $event->load('defaultImage'), // facultatif
+            'invitations' => $event->invitations()->with('participant')->get(),
         ]);
     }
 

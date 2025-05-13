@@ -172,6 +172,11 @@ class InvitationController extends Controller
     {
         $invitation = Invitation::where('token', $token)->with('event')->firstOrFail();
 
+        $invitation->update([
+            'status_invitation_id' => 2, // Acceptée
+            'responded_at' => now(),
+        ]);
+
         if (auth()->check()) {
             $user = auth()->user();
 
@@ -209,6 +214,11 @@ class InvitationController extends Controller
     public function refuse(string $token)
     {
         $invitation = Invitation::where('token', $token)->with('event')->firstOrFail();
+
+        $invitation->update([
+            'status_invitation_id' => 3, // Refusée
+            'responded_at' => now(),
+        ]);
 
         return Inertia::render('Participants/InvitationResponse', [
             'invitation' => $invitation,
