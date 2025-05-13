@@ -19,6 +19,7 @@ use App\Http\Controllers\GiftReservationController;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/post-register-redirect', function () {
     Log::info('🌀 Accès à la route post-register');
@@ -52,6 +53,10 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
+        if (Auth::user()?->salutation_id === 5) {
+            abort(403, 'Accès réservé aux membres inscrits.');
+        }
+
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
