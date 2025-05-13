@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('image'); // chemin ou nom de fichier
+            $table->string('image')->nullable(); // chemin ou nom de fichier
             $table->string('purchase_url')->nullable();
             $table->integer('quantity')->nullable(); // Le champ quantity est prévu pour plus tard, donc nullable
             $table->boolean('is_reserved')->default(false);

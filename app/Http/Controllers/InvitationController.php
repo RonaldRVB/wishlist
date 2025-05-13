@@ -12,8 +12,6 @@ use Inertia\Inertia;
 use Illuminate\Support\Str;
 use App\Notifications\WishlistInvitation;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Database\QueryException;
-
 
 class InvitationController extends Controller
 {
@@ -254,6 +252,20 @@ class InvitationController extends Controller
 
         return Inertia::render('Invitations/MyInvitations', [
             'participations' => $participations,
+        ]);
+    }
+
+    public function showWishlistsFromInvitation(string $token)
+    {
+        $invitation = Invitation::where('token', $token)
+            ->with('event.wishlists.gifts')
+            ->firstOrFail();
+
+        $wishlists = $invitation->event->wishlists;
+
+        return Inertia::render('Wishlists/GuestShow', [
+            'wishlist' => $wishlists->first(),
+            'gifts' => $wishlists->first()?->gifts ?? [],
         ]);
     }
 }
