@@ -10,21 +10,16 @@ const form = useForm({
         null,
 });
 
-// On récupère les props d'Inertia
-const page = usePage();
+const submit = async () => {
+    const token = form.invitation_token;
 
-const submit = () => {
-    form.post(route("login"), {
-        onSuccess: () => {
-            const token = form.invitation_token;
+    if (token) {
+        // ⏳ On attend que Laravel ait bien stocké le token avant de lancer le login
+        await router.post(route("invitations.storeTokenInSession"), { token });
+    }
 
-            if (token) {
-                router.visit(route("invitations.handle.accepted", { token }));
-            } else {
-                router.visit(route("dashboard"));
-            }
-        },
-    });
+    // ✅ Ensuite seulement on lance l’auth
+    form.post(route("login"));
 };
 </script>
 

@@ -96,7 +96,12 @@ if (props.flashError) {
                     >
                         + Nouvelle liste
                     </button>
-
+                    <button
+                        @click="router.visit(route('gifts.create'))"
+                        class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-700"
+                    >
+                        + Ajouter cadeau
+                    </button>
                     <button
                         @click="router.visit(route('events.create'))"
                         class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-700"
