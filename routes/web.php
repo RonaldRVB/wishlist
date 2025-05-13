@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use App\Models\Event;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\DrawController;
 
 Route::get('/post-register-redirect', function () {
     Log::info('🌀 Accès à la route post-register');
@@ -204,3 +205,6 @@ Route::get('/invitations/after-register/{event}', function (Event $event) {
     // S’il y en a plusieurs → page de sélection
     return redirect()->route('wishlists.byEvent', $event);
 })->name('invitations.redirectAfterRegister');
+
+Route::get('/draw', [DrawController::class, 'index'])->name('draw.index');
+Route::post('/draw', [DrawController::class, 'store'])->name('draw.store');
