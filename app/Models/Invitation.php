@@ -25,4 +25,9 @@ class Invitation extends Model
     {
         return $this->belongsTo(Participant::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'email', 'email');
+    }
 }

@@ -62,13 +62,16 @@ class ParticipantController extends Controller
         $user->save();
 
         // Création du participant
-        Participant::create([
+        $participant = Participant::create([
             'invitation_id' => $invitation->id,
             'user_id' => $user->id,
             'event_id' => $invitation->event_id,
             'name' => $validated['name'],
             'invitation_token' => $invitation->token,
         ]);
+
+        $invitation->participant_id = $participant->id;
+        $invitation->save();
 
         // Envoie l’email avec les identifiants
         Mail::to($invitation->email)->send(
