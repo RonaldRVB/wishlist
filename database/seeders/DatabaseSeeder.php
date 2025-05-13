@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             StatusUserSeeder::class,
             StatusEventSeeder::class,
             LegalDocumentSeeder::class,
-            FakeUserSeeder::class
+            FakeUserSeeder::class,
+            StatusInvitationSeeder::class,
         ]);
 
         $admin = User::factory()->create([
