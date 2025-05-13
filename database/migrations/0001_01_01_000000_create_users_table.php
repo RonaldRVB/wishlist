@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('role')->default('user')->after('status_user_id');
             $table->string('terms_version')->nullable();
             $table->timestamp('terms_accepted_at')->nullable();
+            $table->string('invitation_token')->nullable()->after('remember_token');
 
             $table->timestamps();
         });

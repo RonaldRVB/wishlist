@@ -11,6 +11,9 @@ use Illuminate\Support\Str;
 use App\Models\StatusUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\GuestCredentialsMail;
+
 
 class ParticipantController extends Controller
 {
@@ -31,49 +34,51 @@ class ParticipantController extends Controller
         ]);
 
         $invitation = Invitation::where('token', $validated['token'])
-            ->with('event.wishlists.gifts')
+            ->with('event')
             ->firstOrFail();
 
-        $existing = User::where('email', 'guest_' . $invitation->token . '@guest.local')->first();
+        // Vérifie si un invité a déjà été créé
+        $existing = User::where('email', $invitation->email)->first();
         if ($existing) {
-            return back()->withErrors(['name' => 'Un accès invité existe déjà pour ce lien.']);
+            return back()->withErrors(['name' => 'Un accès invité existe déjà pour cette invitation.']);
         }
 
-        if ($invitation->event->wishlists->isEmpty()) {
-            return back()->withErrors(['name' => 'Aucune wishlist n’est liée à cet événement.']);
-        }
+        // 🛠 Mot de passe temporaire
+        $tempPassword = Str::random(10);
 
-        try {
-            DB::beginTransaction();
+        // ID du statut invité
+        $invitedStatusId = StatusUser::where('status_value', 'Invité')->value('id');
 
-            $invitedStatusId = StatusUser::where('status_value', 'Invité')->value('id');
+        // Création du compte invité
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $invitation->email,
+            'password' => bcrypt($tempPassword),
+            'status_user_id' => $invitedStatusId,
+            'salutation_id' => 5,
+        ]);
 
-            $user = User::create([
-                'name' => $validated['name'],
-                'email' => 'guest_' . $invitation->token . '@guest.local',
-                'password' => bcrypt(Str::random(32)),
-                'status' => $invitedStatusId,
-                'salutation_id' => 5,
-            ]);
+        $user->invitation_token = $invitation->token;
+        $user->save();
 
-            Participant::create([
-                'invitation_id' => $invitation->id,
-                'user_id' => $user->id,
-                'event_id' => $invitation->event_id,
-                'name' => $validated['name'],
-            ]);
+        // Création du participant
+        Participant::create([
+            'invitation_id' => $invitation->id,
+            'user_id' => $user->id,
+            'event_id' => $invitation->event_id,
+            'name' => $validated['name'],
+            'invitation_token' => $invitation->token,
+        ]);
 
-            DB::commit();
+        // Envoie l’email avec les identifiants
+        Mail::to($invitation->email)->send(
+            new GuestCredentialsMail($validated['name'], $invitation->email, $tempPassword)
+        );
 
-            Auth::login($user);
+        // Connexion automatique
+        Auth::login($user);
 
-            return redirect()->route('invitations.wishlists', ['token' => $request->token]);
-        } catch (\Throwable $e) {
-            DB::rollBack();
-
-            return back()->withErrors([
-                'name' => "Une erreur s’est produite : " . $e->getMessage(),
-            ]);
-        }
+        // 🔁 Redirection Inertia pour forcer le rechargement complet
+        return Inertia::location(route('invitations.wishlists', ['token' => $request->token]));
     }
 }

@@ -14,7 +14,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
-use App\Http\Responses\LoginResponse;
+use App\Actions\Fortify\LoginResponse as CustomLoginResponse;
+
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -55,6 +56,6 @@ class FortifyServiceProvider extends ServiceProvider
             };
         });
 
-        $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
+        $this->app->singleton(LoginResponseContract::class, CustomLoginResponse::class);
     }
 }

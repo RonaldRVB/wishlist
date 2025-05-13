@@ -88,7 +88,7 @@ function logout() {
             <!-- Espace visuel sous le bloc invité -->
             <div class="h-16"></div>
             <!-- ✅ MESSAGE INVITÉ avec espacement -->
-            <div v-if="isGuest" class="mt-24 pt-16">
+            <div v-if="isGuest" class="mt-10">
                 <div
                     class="bg-red-100 text-red-800 px-6 py-3 rounded-xl border border-red-300 flex items-center justify-center space-x-2 font-semibold"
                 >

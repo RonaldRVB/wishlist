@@ -121,10 +121,6 @@ Route::get('/events/{event}/invitations/edit', [InvitationController::class, 'ed
 Route::post('/invitations/multiple', [InvitationController::class, 'storeMultiple'])->name('invitations.storeMultiple');
 Route::delete('/invitations/{invitation}', [InvitationController::class, 'destroy'])->name('invitations.destroy');
 
-Route::post('/invitations/store-token', function (Request $request) {
-    session(['invitation_token' => $request->token]);
-})->name('invitations.storeTokenInSession');
-
 Route::post('/invitations/{event}/send', [InvitationController::class, 'send'])
     ->name('invitations.send');
 
