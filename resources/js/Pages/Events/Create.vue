@@ -32,7 +32,7 @@ const handleCustomImage = (e) => {
 
     if (file.size > 5 * 1024 * 1024) {
         form.errors.custom_image =
-            "L’image est trop lourde. Elle ne peut pas dépasser 5 Mo.";
+            "L\'image est trop lourde. Elle ne peut pas dépasser 5 Mo.";
         e.target.value = "";
         form.custom_image = null;
         customImagePreview.value = null;
@@ -53,7 +53,7 @@ const handleCustomImage = (e) => {
     img.onerror = () => {
         // ❌ Le fichier ne peut pas être interprété comme image
         form.errors.custom_image =
-            "Le fichier sélectionné n’est pas une image valide.";
+            "Le fichier sélectionné n\'est pas une image valide.";
         e.target.value = "";
         form.custom_image = null;
         customImagePreview.value = null;

@@ -173,85 +173,89 @@ function deleteInvitation() {
                 >
                     {{ $page.props.flash.error }}
                 </div>
-
-                <!-- Boutons de tirage -->
-                <!-- Bloc centré avec texte explicatif et boutons -->
                 <div
-                    class="mt-10 w-full mb-16 flex flex-col items-center text-center"
+                    v-if="event.is_collaborative"
+                    class="bg-white border border-blue-300 rounded-xl p-6 mt-6 flex flex-col items-center shadow"
                 >
+                    <!-- Boutons de tirage -->
+                    <!-- Bloc centré avec texte explicatif et boutons -->
                     <div
-                        class="bg-[#E3EFFD] border border-blue-300 rounded-xl shadow px-6 py-4 max-w-xl w-full"
+                        class="mt-10 w-full mb-16 flex flex-col items-center text-center"
                     >
-                        <p class="text-gray-800 font-medium mb-4">
-                            <span class="italic"
-                                >Effectue un tirage pour répartir les cadeaux
-                                entre les invités</span
-                            >
-                        </p>
+                        <div
+                            class="bg-[#E3EFFD] border border-blue-300 rounded-xl shadow px-6 py-4 max-w-xl w-full"
+                        >
+                            <p class="text-gray-800 font-medium mb-4">
+                                <span class="italic"
+                                    >Effectue un tirage pour répartir les
+                                    cadeaux entre les invités</span
+                                >
+                            </p>
 
-                        <!-- Boutons -->
-                        <div class="flex flex-wrap justify-center gap-4">
-                            <button
-                                @click="
-                                    router.visit(
-                                        route('draw.fromInvitations', {
-                                            event: event.id,
-                                        }),
-                                    )
-                                "
-                                class="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-indigo-700"
-                            >
-                                🎲 Tirage test (invitations)
-                            </button>
+                            <!-- Boutons -->
+                            <div class="flex flex-wrap justify-center gap-4">
+                                <button
+                                    @click="
+                                        router.visit(
+                                            route('draw.fromInvitations', {
+                                                event: event.id,
+                                            }),
+                                        )
+                                    "
+                                    class="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-indigo-700"
+                                >
+                                    🎲 Tirage test (invitations)
+                                </button>
 
-                            <button
-                                @click="
-                                    router.visit(
-                                        route('draw.fromParticipants', {
-                                            event: event.id,
-                                        }),
-                                    )
-                                "
-                                class="bg-green-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-green-700"
-                            >
-                                ✅ Tirage final (acceptés)
-                            </button>
+                                <button
+                                    @click="
+                                        router.visit(
+                                            route('draw.fromParticipants', {
+                                                event: event.id,
+                                            }),
+                                        )
+                                    "
+                                    class="bg-green-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-green-700"
+                                >
+                                    ✅ Tirage final (acceptés)
+                                </button>
+                            </div>
+
+                            <!-- Message d'info -->
+                            <p class="text-xs text-gray-500 italic mt-3">
+                                ⚠️ 3 participants minimum requis pour un tirage
+                                valide
+                            </p>
                         </div>
+                    </div>
 
-                        <!-- Message d'info -->
-                        <p class="text-xs text-gray-500 italic mt-3">
-                            ⚠️ 3 participants minimum requis pour un tirage
-                            valide
-                        </p>
+                    <!-- Résultat du tirage -->
+                    <div
+                        v-if="drawResult"
+                        class="mt-10 w-full bg-white rounded-xl shadow p-6 border border-green-400"
+                    >
+                        <h2 class="text-xl font-bold text-green-800 mb-4">
+                            Résultat du tirage
+                            <span v-if="drawType === 'invitations'"
+                                >(via invitations)</span
+                            >
+                            <span v-else>(via participants)</span>
+                        </h2>
+
+                        <ul class="space-y-2">
+                            <li
+                                v-for="(pair, index) in drawResult"
+                                :key="index"
+                                class="text-gray-800"
+                            >
+                                <strong>{{ pair.from }}</strong> offre un cadeau
+                                à
+                                <strong>{{ pair.to }}</strong>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-
-                <!-- Résultat du tirage -->
-                <div
-                    v-if="drawResult"
-                    class="mt-10 w-full bg-white rounded-xl shadow p-6 border border-green-400"
-                >
-                    <h2 class="text-xl font-bold text-green-800 mb-4">
-                        Résultat du tirage
-                        <span v-if="drawType === 'invitations'"
-                            >(via invitations)</span
-                        >
-                        <span v-else>(via participants)</span>
-                    </h2>
-
-                    <ul class="space-y-2">
-                        <li
-                            v-for="(pair, index) in drawResult"
-                            :key="index"
-                            class="text-gray-800"
-                        >
-                            <strong>{{ pair.from }}</strong> offre un cadeau à
-                            <strong>{{ pair.to }}</strong>
-                        </li>
-                    </ul>
-                </div>
             </div>
-
             <!-- Modal suppression -->
             <ModalDelete
                 v-if="showDeleteModal"
