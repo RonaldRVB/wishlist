@@ -26,6 +26,8 @@ yarn-error.log
 !/storage/app/public/images
 !/storage/app/public/images/.gitkeep
 !/storage/app/public/images/favicon.ico
+!/storage/app/public/images/accueil.jpg
+!/storage/app/public/images/adraw.jpg
 !/storage/app/public/events
 !/storage/app/public/events/.gitkeep
 
