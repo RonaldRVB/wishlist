@@ -48,7 +48,8 @@ class EventController extends Controller
 
         if ($wishlists->isEmpty()) {
             return redirect()->route('wishlists.index')
-                ->with('error', 'Vous devez d’abord créer une autre wishlist (autre que votre liste personnelle) avant de créer un événement.');
+                ->with('error', 'Votre liste personnelle n\'est pas une wishlist valide pour la création d\'un événement.
+                Vous devez d\'abord créer une autre wishlist qui, elle, sera valide pour un ou plusieurs événement(s).');
         }
 
         $defaultImages = DefaultImage::orderBy('label')->get();
