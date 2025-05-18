@@ -70,7 +70,7 @@ function closeModal() {
                                 <th class="text-left px-4 py-2">Titre</th>
                                 <th class="text-left px-4 py-2">Date</th>
                                 <th class="text-left px-4 py-2">Image</th>
-                                <th class="text-left px-4 py-2">Slug</th>
+                                <!-- <th class="text-left px-4 py-2">Slug</th> -->
                                 <th class="text-left px-4 py-2">Actions</th>
                             </tr>
                         </thead>
@@ -98,9 +98,9 @@ function closeModal() {
                                     </div>
                                 </td>
 
-                                <td class="px-4 py-2 font-bold italic text-gray-600">
+                                <!-- <td class="px-4 py-2 font-bold italic text-gray-600">
                                     {{ event.slug }}
-                                </td>
+                                </td> -->
                                 <td class="px-4 py-2 h-16 pt-6 flex items-center justify-start space-x-2">
                                     <button @click="
                                         router.visit(
