@@ -35,40 +35,30 @@ onMounted(() => {
 </script>
 
 <template>
+
     <Head :title="title" />
 
-    <div
-        class="relative min-h-screen bg-cover bg-center bg-fixed text-blue-900"
-        style="background-image: url(&quot;/storage/images/accueil.jpg&quot;)"
-    >
+    <div class="relative min-h-screen bg-cover bg-center bg-fixed text-blue-900"
+        style="background-image: url(&quot;/storage/images/accueil.jpg&quot;)">
         <!-- Header -->
         <div class="absolute top-0 right-0 p-6 flex gap-4 z-10">
-            <Link
-                v-if="canLogin"
-                :href="route('login')"
-                class="bg-indigo-600 text-white font-semibold px-6 py-2 rounded-xl hover:bg-indigo-700 transition"
-            >
-                Log in
+            <Link v-if="canLogin" :href="route('login')"
+                class="bg-indigo-600 text-white font-semibold px-6 py-2 rounded-xl hover:bg-indigo-700 transition">
+            Log in
             </Link>
 
-            <Link
-                v-if="canRegister"
-                :href="route('register')"
-                class="bg-indigo-600 text-white font-semibold px-6 py-2 rounded-xl hover:bg-indigo-700 transition"
-            >
-                Register
+            <Link v-if="canRegister" :href="route('register')"
+                class="bg-indigo-600 text-white font-semibold px-6 py-2 rounded-xl hover:bg-indigo-700 transition">
+            Register
             </Link>
         </div>
 
         <!-- Contenu principal -->
         <div class="min-h-screen backdrop-blur-sm bg-white/60 px-4 py-24">
-            <div
-                class="grid grid-cols-1 md:grid-cols-[1.3fr_1fr] gap-10 max-w-7xl mx-auto items-start"
-            >
+            <div class="grid grid-cols-1 md:grid-cols-[1.3fr_1fr] gap-10 max-w-7xl mx-auto items-start">
                 <!-- Texte à gauche -->
                 <div
-                    class="bg-white/80 text-blue-900 p-8 rounded-xl shadow text-justify leading-relaxed max-w-2xl mx-auto"
-                >
+                    class="bg-white/80 text-blue-900 p-8 rounded-xl shadow text-justify leading-relaxed max-w-2xl mx-auto">
                     <h2 class="text-3xl font-bold mb-4">
                         Bienvenue sur Wishlist
                     </h2>
@@ -84,8 +74,7 @@ onMounted(() => {
 
                 <!-- Bloc tirage à droite -->
                 <div
-                    class="bg-[#E3EFFD] border-[6px] border-[#a7befe] p-6 rounded-xl shadow-xl text-justify leading-relaxed w-full max-w-md mx-auto"
-                >
+                    class="bg-[#E3EFFD] border-[6px] border-[#a7befe] p-6 rounded-xl shadow-xl text-justify leading-relaxed w-full max-w-md mx-auto">
                     <h1 class="text-2xl font-bold mb-4">
                         🎲 Tirage au sort sans compte
                     </h1>
@@ -98,14 +87,20 @@ onMounted(() => {
                     </p>
 
                     <div class="flex justify-end">
-                        <button
-                            @click="router.visit(route('draw.index'))"
-                            class="bg-indigo-600 text-white font-semibold px-6 py-2 rounded-xl hover:bg-indigo-700 transition"
-                        >
+                        <button @click="router.visit(route('draw.index'))"
+                            class="bg-indigo-600 text-white font-semibold px-6 py-2 rounded-xl hover:bg-indigo-700 transition">
                             Accéder au tirage
                         </button>
                     </div>
                 </div>
+            </div>
+            <!-- Bouton en bas centré -->
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10">
+                <button @click="router.visit(route('legal.public'))"
+                    class="bg-indigo-600 text-white font-semibold px-6 py-2 rounded-xl hover:bg-indigo-700 transition">
+                    Mentions légales
+                </button>
+
             </div>
         </div>
     </div>

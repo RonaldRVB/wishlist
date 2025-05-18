@@ -1,5 +1,8 @@
 <script setup>
 import { useForm, router } from '@inertiajs/vue3'
+import { Head } from "@inertiajs/vue3";
+
+document.title = "Wishlist - Participants";
 
 const props = defineProps({
     invitation: Object,
@@ -18,6 +21,8 @@ function submit() {
 </script>
 
 <template>
+
+    <Head title="Wishlist - Participants" />
     <div class="w-full min-h-screen bg-[#D6E9FC] py-10 px-6 flex items-center justify-center">
         <div class="not-prose max-w-md w-full bg-[#E3EFFD] rounded-xl shadow border border-blue-300 p-6">
             <h1 class="text-2xl font-bold text-blue-900 text-center mb-6">

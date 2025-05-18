@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DrawController;
 
+
 Route::get('/post-register-redirect', function () {
     Log::info('🌀 Accès à la route post-register');
 
@@ -64,8 +65,8 @@ Route::middleware([
 });
 
 
-Route::get('/mockup', fn() => Inertia::render('Mockup/Mockup'))->name('mockup');
-Route::get('/colors', fn() => Inertia::render('Mockup/ColorComparison'))->name('colors');
+// Route::get('/mockup', fn() => Inertia::render('Mockup/Mockup'))->name('mockup');
+// Route::get('/colors', fn() => Inertia::render('Mockup/ColorComparison'))->name('colors');
 
 
 Route::get('/mentions-legales', function () {
@@ -211,3 +212,17 @@ Route::get('/draw', [DrawController::class, 'index'])->name('draw.index');
 Route::post('/draw', [DrawController::class, 'store'])->name('draw.store');
 Route::get('/events/{event}/draw/test', [DrawController::class, 'drawFromInvitations'])->name('draw.fromInvitations');
 Route::get('/events/{event}/draw/final', [DrawController::class, 'drawFromParticipants'])->name('draw.fromParticipants');
+
+
+// Route::get('/tests', function () {
+//     return Inertia::render('Tests');
+// })->name('tests');
+
+
+Route::get('/mentions-legales', function () {
+    $document = LegalDocument::first();
+
+    return Inertia::render('Documents/PublicMentions', [
+        'document' => $document,
+    ]);
+})->name('legal.public');

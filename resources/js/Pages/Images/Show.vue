@@ -1,9 +1,11 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { router } from '@inertiajs/vue3'
-
+import { Head } from "@inertiajs/vue3";
 
 defineOptions({ layout: AppLayout })
+
+document.title = "Wishlist - Images";
 
 defineProps({
     image: Object,
@@ -11,6 +13,8 @@ defineProps({
 </script>
 
 <template>
+
+    <Head title="Wishlist - Images" />
     <div class="w-full min-h-screen bg-[#D6E9FC] py-10 px-6 flex flex-col items-center">
         <div class="not-prose max-w-4xl w-full">
             <div class="flex justify-between items-center mb-6">

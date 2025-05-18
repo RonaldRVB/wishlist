@@ -3,8 +3,11 @@ import { router } from '@inertiajs/vue3'
 import { ref } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import ModalDelete from '@/Components/Modals/ModalDelete.vue'
+import { Head } from "@inertiajs/vue3";
 
 defineOptions({ layout: AppLayout })
+
+document.title = "Wishlist - Utilisateurs";
 
 defineProps({
     users: Array,
@@ -28,6 +31,8 @@ function deleteUser() {
 </script>
 
 <template>
+
+    <Head title="Wishlist - Utilisateurs" />
     <div class="w-full min-h-screen bg-[#D6E9FC] py-10 px-6 flex flex-col items-center">
         <div class="not-prose">
             <h1 class="text-3xl font-bold mb-6 text-blue-900">Liste des utilisateurs</h1>
