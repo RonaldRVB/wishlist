@@ -69,13 +69,24 @@ Route::middleware([
 // Route::get('/colors', fn() => Inertia::render('Mockup/ColorComparison'))->name('colors');
 
 
+// ✅ Route publique
 Route::get('/mentions-legales', function () {
+    $document = LegalDocument::first();
+
+    return Inertia::render('Documents/PublicMentions', [
+        'document' => $document,
+    ]);
+})->name('legal.public');
+
+// ✅ Route privée, pour utilisateurs connectés
+Route::get('/documents/mentions-legales', function () {
     $document = LegalDocument::where('is_active', true)->latest()->first();
 
     return Inertia::render('Documents/LegalMentions', [
         'document' => $document,
     ]);
-})->name('legal.mentions');
+})->middleware('auth')->name('legal.mentions');
+
 
 
 Route::middleware(['auth', 'verified', IsAdmin::class])->group(function () {
@@ -217,12 +228,3 @@ Route::get('/events/{event}/draw/final', [DrawController::class, 'drawFromPartic
 // Route::get('/tests', function () {
 //     return Inertia::render('Tests');
 // })->name('tests');
-
-
-Route::get('/mentions-legales', function () {
-    $document = LegalDocument::first();
-
-    return Inertia::render('Documents/PublicMentions', [
-        'document' => $document,
-    ]);
-})->name('legal.public');
