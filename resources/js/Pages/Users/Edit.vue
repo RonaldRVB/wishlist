@@ -1,8 +1,11 @@
 <script setup>
 import { useForm, router } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
+import { Head } from "@inertiajs/vue3";
 
 defineOptions({ layout: AppLayout })
+
+document.title = "Wishlist - Utilisateurs";
 
 const props = defineProps({
     user: Object,
@@ -26,6 +29,8 @@ const submit = () => {
 </script>
 
 <template>
+
+    <Head title="Wishlist - Utilisateurs" />
     <div class="w-full min-h-screen bg-[#D6E9FC] py-10 px-6 flex justify-center">
         <div class="not-prose max-w-4xl w-full">
             <!-- Titre + bouton retour -->

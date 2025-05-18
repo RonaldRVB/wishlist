@@ -1,8 +1,11 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { useForm, router } from '@inertiajs/vue3'
+import { Head } from "@inertiajs/vue3";
 
 defineOptions({ layout: AppLayout })
+
+document.title = "Wishlist - Invitations";
 
 const props = defineProps({
     eventId: Number,
@@ -31,6 +34,8 @@ function submit() {
 </script>
 
 <template>
+
+    <Head title="Wishlist - Invitations" />
     <div class="w-full min-h-screen bg-[#D6E9FC] py-10 px-6 flex flex-col items-center">
         <div class="not-prose max-w-3xl w-full">
             <div class="flex justify-between items-center mb-6">

@@ -1,8 +1,11 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { useForm, router } from '@inertiajs/vue3'
+import { Head } from "@inertiajs/vue3";
 
 defineOptions({ layout: AppLayout })
+
+document.title = "Wishlist - Utilisateurs";
 
 const form = useForm({
     name: '',
@@ -24,6 +27,8 @@ defineProps({
 </script>
 
 <template>
+
+    <Head title="Wishlist - Utilisateurs" />
     <div class="w-full min-h-screen bg-[#E3EFFD] py-10 px-6 flex flex-col items-center">
         <div class="not-prose max-w-4xl w-full">
             <!-- Titre + bouton retour -->

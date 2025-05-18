@@ -1,8 +1,11 @@
 <script setup>
 import { router } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
+import { Head } from "@inertiajs/vue3";
 
 defineOptions({ layout: AppLayout })
+
+document.title = "Wishlist - Documents";
 
 defineProps({
     documents: Array
@@ -10,6 +13,8 @@ defineProps({
 </script>
 
 <template>
+
+    <Head title="Wishlist - Documents" />
     <div class="w-full min-h-screen bg-[#D6E9FC] py-10 px-6 flex flex-col items-center">
         <h1 class="text-3xl font-bold mb-6 text-blue-900">Mentions légales - Administration</h1>
 

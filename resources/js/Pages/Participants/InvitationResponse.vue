@@ -1,5 +1,8 @@
 <script setup>
 import { router } from "@inertiajs/vue3";
+import { Head } from "@inertiajs/vue3";
+
+document.title = "Wishlist - Participants";
 
 const props = defineProps({
     invitation: Object,
@@ -32,12 +35,10 @@ function redirectToLogin() {
 </script>
 
 <template>
-    <div
-        class="w-full min-h-screen bg-[#D6E9FC] px-6 flex items-center justify-center"
-    >
-        <div
-            class="not-prose max-w-xl w-full bg-[#E3EFFD] rounded-xl shadow p-6 border border-blue-300 text-center"
-        >
+
+    <Head title="Wishlist - Participants" />
+    <div class="w-full min-h-screen bg-[#D6E9FC] px-6 flex items-center justify-center">
+        <div class="not-prose max-w-xl w-full bg-[#E3EFFD] rounded-xl shadow p-6 border border-blue-300 text-center">
             <h1 class="text-2xl font-bold text-blue-900 mb-4">
                 {{
                     status === "accepted"
@@ -68,26 +69,19 @@ function redirectToLogin() {
             </p>
 
             <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <button
-                    @click="registerAsUser"
-                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl font-bold"
-                >
+                <button @click="registerAsUser"
+                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl font-bold">
                     ✅ Oui, je veux m’inscrire
                 </button>
 
                 <!-- Visible seulement si l’inscription n’est pas obligatoire -->
-                <button
-                    v-if="status === 'accepted' && !requires_account"
-                    @click="continueAsGuest"
-                    class="bg-indigo-400 hover:bg-indigo-500 text-blue-900 px-4 py-2 rounded-xl font-bold"
-                >
+                <button v-if="status === 'accepted' && !requires_account" @click="continueAsGuest"
+                    class="bg-indigo-400 hover:bg-indigo-500 text-blue-900 px-4 py-2 rounded-xl font-bold">
                     👀 Continuer sans compte
                 </button>
 
-                <button
-                    @click="redirectToLogin"
-                    class="bg-indigo-200 hover:bg-indigo-300 text-indigo-800 px-4 py-2 rounded-xl font-bold flex items-center gap-1"
-                >
+                <button @click="redirectToLogin"
+                    class="bg-indigo-200 hover:bg-indigo-300 text-indigo-800 px-4 py-2 rounded-xl font-bold flex items-center gap-1">
                     🔐 Déjà membre ?
                 </button>
             </div>
