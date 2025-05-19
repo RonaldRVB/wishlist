@@ -2,6 +2,11 @@
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { useForm, router } from '@inertiajs/vue3'
 import { Head } from "@inertiajs/vue3";
+import { onMounted } from 'vue';
+
+defineOptions({ layout: AppLayout })
+
+// document.title = "Wishlist - Invitations";
 
 defineOptions({ layout: AppLayout })
 
@@ -31,6 +36,10 @@ function submit() {
         preserveScroll: true,
     })
 }
+
+onMounted(() => {
+    document.title = "Wishlist - Invitations";
+});
 </script>
 
 <template>
