@@ -195,6 +195,9 @@ class EventController extends Controller
     {
         $user = auth()->user();
 
+        // Recharger l’événement avec la relation defaultImage
+        $event->load('defaultImage');
+
         // On récupère toutes les wishlists liées à l’événement
         $wishlists = $event->wishlists()
             ->with(['gifts', 'user'])

@@ -82,9 +82,19 @@ class CreateNewUser implements CreatesNewUsers
             ]);
         }
 
+        if (isset($invitation) && $invitation->event_id && $wishlist->title !== 'Ma liste personnelle') {
+            EventWishlist::create([
+                'event_id' => $invitation->event_id,
+                'wishlist_id' => $wishlist->id,
+            ]);
+        }
 
-
-        session()->put('force_redirect_after_register', route('invitations.redirectAfterRegister', ['event' => $invitation->event_id]));
+        if (isset($invitation)) {
+            session()->put(
+                'force_redirect_after_register',
+                route('invitations.redirectAfterRegister', ['event' => $invitation->event_id])
+            );
+        }
 
         return $user;
     }
