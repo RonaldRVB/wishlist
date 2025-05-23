@@ -58,6 +58,12 @@ function logout() {
                     <p class="text-sm text-gray-700 text-center mb-4">
                         {{ gift.description }}
                     </p>
+                    <a v-if="gift.purchase_url" :href="gift.purchase_url"
+                        class="text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-full text-sm mb-2"
+                        target="_blank">
+                        Voir le produit
+                    </a>
+
 
                     <button v-if="!gift.is_reserved" @click="reserveGift(gift.id)"
                         class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl font-bold">

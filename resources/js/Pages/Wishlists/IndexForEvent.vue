@@ -46,8 +46,10 @@ function createWishlistForEvent() {
                 <!-- Image de l'événement -->
                 <img :src="event.custom_image
                     ? '/storage/' + event.custom_image
-                    : '/images/default-event.webp'
-                    " alt="Miniature" class="w-16 h-16 rounded-lg object-cover shrink-0" />
+                    : '/storage/' + event.default_image?.path" alt="Miniature"
+                    class="w-16 h-16 rounded-lg object-cover shrink-0" />
+
+
 
                 <!-- Nom utilisateur -->
                 <p class="font-bold text-blue-900 whitespace-nowrap">
