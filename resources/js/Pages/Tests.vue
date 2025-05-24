@@ -13,12 +13,6 @@ const tests = [
         note: "Prévu mais pas encore mis en place",
     },
     {
-        feature: "Statut utilisateur 'Banni' pour l'exclusion d'un utilisateur",
-        expected: "Un utilisateur banni ne peut plus se connecter",
-        tested: false,
-        note: "Prévu mais pas encore mis en place",
-    },
-    {
         feature: "Création de wishlists",
         expected: "Un utilisateur peut créer une ou plusieurs wishlists",
         tested: true,
@@ -67,6 +61,12 @@ const tests = [
         note: "",
     },
     {
+        feature: "Suppression automatique des invitations provisoires",
+        expected: "Les accès liés à l’invitation provisoire expirent 7 jours après la date de l'événement",
+        tested: false,
+        note: "Prévu mais pas encore mis en place",
+    },
+    {
         feature: "Tirage au sort",
         expected: "Le tirage prend uniquement les invités ayant accepté",
         tested: true,
@@ -79,8 +79,14 @@ const tests = [
         note: "",
     },
     {
+        feature: "Statut utilisateur 'Banni' pour l'exclusion d'un utilisateur",
+        expected: "Un utilisateur banni ne peut plus se connecter",
+        tested: false,
+        note: "Prévu mais pas encore mis en place",
+    },
+    {
         feature: "Modification des mentions légales depuis l’admin",
-        expected: "Texte éditable",
+        expected: "Texte éditable et versionnable",
         tested: true,
         note: "",
     },
