@@ -13,6 +13,12 @@ const tests = [
         note: "Prévu mais pas encore mis en place",
     },
     {
+        feature: "Statut utilisateur 'Banni' pour l'exclusion d'un utilisateur",
+        expected: "Un utilisateur banni ne peut plus se connecter",
+        tested: false,
+        note: "Prévu mais pas encore mis en place",
+    },
+    {
         feature: "Création de wishlists",
         expected: "Un utilisateur peut créer une ou plusieurs wishlists",
         tested: true,
