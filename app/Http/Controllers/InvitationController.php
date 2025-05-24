@@ -207,6 +207,8 @@ class InvitationController extends Controller
         }
 
         // Cas non connecté : affiche la vue explicative
+        session(['redirect_invitation_token' => $invitation->token]);
+
         return Inertia::render('Participants/InvitationResponse', [
             'invitation' => $invitation,
             'status' => 'accepted',
