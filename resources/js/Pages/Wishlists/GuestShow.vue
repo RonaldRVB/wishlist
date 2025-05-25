@@ -36,7 +36,7 @@ function logout() {
         <div class="max-w-5xl mx-auto">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
                 <h1 class="text-3xl font-bold text-blue-900 text-center sm:text-left">
-                    Liste de souhaits : {{ wishlist.name }}
+                    Liste publique – {{ wishlist.title }}
                 </h1>
 
                 <div v-if="isGuest" class="mt-4 sm:mt-0 flex justify-center sm:justify-end">
@@ -47,6 +47,11 @@ function logout() {
                 </div>
             </div>
 
+            <div v-if="wishlist.description"
+                class="mb-16 text-xl border border-indigo-400 bg-indigo-100 text-indigo-800 px-4 py-3 rounded-xl text-center max-w-3xl mx-auto font-bold italic">
+                {{ wishlist.description }}
+            </div>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 <div v-for="gift in gifts" :key="gift.id"
                     class="bg-white p-4 rounded-xl shadow border border-blue-300 flex flex-col items-center">
@@ -55,7 +60,8 @@ function logout() {
                     <h2 class="text-lg font-bold text-blue-900 text-center mb-2">
                         {{ gift.name }}
                     </h2>
-                    <p class="text-sm text-gray-700 text-center mb-4">
+                    <p v-if="gift.description"
+                        class=" mb-2 border border-indigo-400 bg-indigo-100 text-indigo-800 px-2 py-1 rounded-xl text-center max-w-3xl mx-auto">
                         {{ gift.description }}
                     </p>
                     <a v-if="gift.purchase_url" :href="gift.purchase_url"

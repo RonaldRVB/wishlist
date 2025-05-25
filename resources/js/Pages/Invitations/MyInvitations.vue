@@ -24,8 +24,13 @@ const props = defineProps({
             </div>
 
             <ul class="space-y-4">
-                <li v-for="participation in participations" :key="participation.id"
-                    class="bg-[#E3EFFD] border border-blue-300 p-4 rounded-xl shadow flex justify-between items-center">
+                <li v-for="participation in participations" :key="participation.id" :class="[
+                    'p-4 rounded-xl shadow flex justify-between items-center border',
+                    participation.event.user_id === $page.props.auth.user.id
+                        ? 'bg-teal-100 border-teal-400'
+                        : 'bg-[#E3EFFD] border-blue-300',
+                ]">
+
                     <div>
                         <p class="text-blue-800 font-semibold">
                             Événement : {{ participation.event.title }}
