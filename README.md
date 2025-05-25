@@ -11,6 +11,12 @@ composer require intervention/image
 composer require laravel-lang/lang --dev
 npm install marked
 
+composer require fakerphp/faker --dev
+
+<!-- Si besoin -->
+
+composer update league/commonmark
+
 # Configuration habituelle Laravel
 
 cp .env.example .env

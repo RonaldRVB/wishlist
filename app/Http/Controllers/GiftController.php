@@ -114,6 +114,8 @@ class GiftController extends Controller
             );
 
             $validated['image'] = $path;
+        } else {
+            unset($validated['image']); // évite de mettre `image = null`
         }
 
         $gift->update($validated);

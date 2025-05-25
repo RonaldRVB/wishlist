@@ -72,9 +72,14 @@ const cancelReservation = (giftId) => {
                 </button>
             </div>
 
-            <p class="text-gray-800 mb-6 text-center">
+            <!-- <p class="text-gray-800 mb-6 text-center">
                 {{ wishlist.description }}
-            </p>
+            </p> -->
+            <div v-if="wishlist.description"
+                class="mb-16 text-xl border border-indigo-400 bg-indigo-100 text-indigo-800 px-4 py-3 rounded-xl text-center max-w-3xl mx-auto font-bold italic">
+                {{ wishlist.description }}
+            </div>
+
 
             <div v-if="wishlist.gifts.length === 0" class="text-gray-600 italic text-center">
                 Aucun cadeau n’est encore présent dans cette wishlist.
@@ -91,7 +96,8 @@ const cancelReservation = (giftId) => {
                         {{ gift.name }}
                     </h2>
 
-                    <p class="text-gray-700 text-sm mb-3 text-center">
+                    <p v-if="gift.description"
+                        class=" mb-2 border border-indigo-400 bg-indigo-100 text-indigo-800 px-2 py-1 rounded-xl text-center max-w-3xl mx-auto">
                         {{ gift.description }}
                     </p>
 
