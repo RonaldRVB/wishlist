@@ -87,7 +87,7 @@ watch(
 
                 <div class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
                     :class="{
-                        'bg-[#2DD4BF] text-blue-800':
+                        'bg-[#2DD4BF] text-blue-700':
                             route().current('gifts.index') ||
                             route().current('gifts.create') ||
                             route().current('gifts.edit') ||
@@ -97,7 +97,7 @@ watch(
                 </div>
                 <div class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
                     :class="{
-                        'bg-[#2DD4BF] text-blue-800':
+                        'bg-[#2DD4BF] text-blue-700':
                             route().current('wishlists.*') &&
                             !route().current('wishlists.byEvent'),
                     }" @click="handleNavigation('wishlists.index')">
@@ -107,7 +107,7 @@ watch(
 
                 <div class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
                     :class="{
-                        'bg-[#2DD4BF] text-blue-800':
+                        'bg-[#2DD4BF] text-blue-700':
                             route().current('events.*'),
                     }" @click="handleNavigation('events.index')">
                     Mes événements
@@ -116,7 +116,7 @@ watch(
                 <div v-if="auth.user"
                     class="text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
                     :class="{
-                        'bg-[#2DD4BF] text-blue-800':
+                        'bg-[#2DD4BF] text-blue-700':
                             route().current('invitations.mine') ||
                             route().current('wishlists.byEvent'),
                     }" @click="router.visit(route('invitations.mine'))">
@@ -129,7 +129,7 @@ watch(
                 <div v-if="isAdmin"
                     class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
                     :class="{
-                        'bg-[#2DD4BF] text-blue-800':
+                        'bg-[#2DD4BF] text-blue-700':
                             route().current('users.index') ||
                             route().current('users.create') ||
                             route().current('users.edit') ||
@@ -142,7 +142,7 @@ watch(
                 <div v-if="isAdmin"
                     class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
                     :class="{
-                        'bg-[#2DD4BF] text-blue-800':
+                        'bg-[#2DD4BF] text-blue-700':
                             route().current('documents.index') ||
                             route().current('documents.create') ||
                             route().current('documents.edit') ||
@@ -155,7 +155,7 @@ watch(
                 <div v-if="isAdmin"
                     class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
                     :class="{
-                        'bg-[#2DD4BF] text-blue-800':
+                        'bg-[#2DD4BF] text-blue-700':
                             route().current('images.index') ||
                             route().current('images.editReplace') ||
                             route().current('images.create') ||
@@ -177,7 +177,7 @@ watch(
             <hr class="border-[#F87171] my-4 mt-4" />
             <div class="block w-full font-semibold text-left py-2 px-4 rounded hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
                 :class="{
-                    'bg-[#2DD4BF] text-blue-800':
+                    'bg-[#2DD4BF] text-blue-700':
                         route().current('legal.mentions'),
                 }" @click="handleNavigation('legal.mentions')">
                 Mentions légales
