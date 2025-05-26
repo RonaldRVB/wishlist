@@ -62,8 +62,17 @@ function closeModal() {
             </div>
 
             <div v-if="wishlist.description"
-                class="mb-16 text-xl border border-indigo-400 bg-indigo-100 text-indigo-800 px-4 py-3 rounded-xl text-center max-w-3xl mx-auto font-bold italic">
+                class="mb-10 text-xl border border-indigo-400 bg-indigo-100 text-indigo-800 px-4 py-3 rounded-xl text-center max-w-3xl mx-auto font-bold italic">
                 {{ wishlist.description }}
+            </div>
+
+            <!-- MESSAGE INVITÉ avec espacement -->
+            <div v-if="isGuest" class="mt-2 mb-16">
+                <div
+                    class="bg-red-100 text-red-800 px-6 py-3 rounded-xl border border-red-300 flex items-center justify-center space-x-2 font-semibold">
+                    <span>⚠️</span>
+                    <span>Accès invité temporaire</span>
+                </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">

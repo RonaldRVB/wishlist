@@ -157,13 +157,13 @@ watch(
                     :class="{
                         'bg-[#2DD4BF] text-blue-800':
                             route().current('images.index') ||
+                            route().current('images.editReplace') ||
                             route().current('images.create') ||
                             route().current('images.edit') ||
                             route().current('images.show'),
                     }" @click="handleNavigation('images.index')">
                     Images par défaut
                 </div>
-
             </nav>
 
             <hr class="border-[#F87171] my-4 mt-4" />
