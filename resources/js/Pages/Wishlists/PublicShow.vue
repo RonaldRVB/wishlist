@@ -3,6 +3,8 @@ import { usePage } from "@inertiajs/vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { router } from "@inertiajs/vue3";
 import { Head } from "@inertiajs/vue3";
+import { ref } from "vue";
+
 
 defineOptions({ layout: AppLayout });
 
@@ -49,6 +51,20 @@ const cancelReservation = (giftId) => {
         },
     );
 };
+
+const showModal = ref(false);
+const modalImageUrl = ref("");
+
+function openModal(imagePath) {
+    modalImageUrl.value = "/storage/" + imagePath;
+    showModal.value = true;
+}
+
+function closeModal() {
+    showModal.value = false;
+    modalImageUrl.value = "";
+}
+
 </script>
 
 <template>
@@ -88,9 +104,10 @@ const cancelReservation = (giftId) => {
             <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 <div v-for="gift in wishlist.gifts" :key="gift.id"
                     class="bg-[#E3EFFD] border border-blue-300 p-4 rounded-2xl shadow-sm flex flex-col items-center">
-                    {{ console.log(gift.name, gift.is_reserved) }}
-                    <img v-if="gift.image" :src="`/storage/${gift.image}`" :alt="gift.name"
-                        class="w-32 h-32 object-cover rounded-xl mb-3" />
+                    <!-- {{ console.log(gift.name, gift.is_reserved) }} -->
+                    <img v-if="gift.image" :src="'/storage/' + gift.image" :alt="gift.name"
+                        class="w-full h-40 object-cover rounded-lg mb-4 cursor-pointer"
+                        @click="openModal(gift.image)" />
 
                     <h2 class="text-lg font-bold text-gray-900 mb-1 text-center">
                         {{ gift.name }}
@@ -130,6 +147,18 @@ const cancelReservation = (giftId) => {
                     </button>
                 </div>
             </div>
+        </div>
+    </div>
+    <!-- Modal image agrandie -->
+    <div v-if="showModal"
+        class="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center z-50">
+        <div class="relative bg-[#E3EFFD] p-4 rounded-lg shadow-xl flex justify-center items-center">
+            <img :src="modalImageUrl" alt="Image du cadeau agrandie"
+                class="max-w-full max-h-[70vh] object-contain rounded" />
+            <button @click="closeModal"
+                class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2">
+                ✕
+            </button>
         </div>
     </div>
 </template>

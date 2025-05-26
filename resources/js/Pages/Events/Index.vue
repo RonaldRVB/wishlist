@@ -86,15 +86,13 @@ function closeModal() {
                                         ).toLocaleDateString("fr-FR")
                                     }}
                                 </td>
+
                                 <td class="px-4 py-2">
                                     <div class="group relative w-16 h-16 overflow-hidden rounded-xl shadow">
-                                        <img :src="'/storage/' +
-                                            (event.custom_image ||
-                                                event.default_image?.path) +
-                                            '?v=' +
-                                            Date.now()
-                                            " :alt="event.title" class="h-16 w-16 object-cover rounded-lg shadow"
-                                            @click="openModal(event.custom_image)" />
+                                        <img :src="'/storage/' + (event.custom_image || event.default_image?.path) + '?v=' + Date.now()"
+                                            :alt="event.title"
+                                            class="h-16 w-16 object-cover rounded-lg shadow cursor-pointer"
+                                            @click="openModal(event.custom_image || event.default_image?.path)" />
                                     </div>
                                 </td>
 
@@ -166,7 +164,7 @@ function closeModal() {
         <div v-if="showModal"
             class="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center z-50">
             <div class="relative bg-[#E3EFFD] p-4 rounded-lg shadow-xl flex justify-center items-center">
-                <img :src="modalImageUrl" alt="Image du cadeau agrandie"
+                <img :src="modalImageUrl" alt="Image de l'événement agrandie"
                     class="max-w-full max-h-[70vh] object-contain rounded" />
                 <button @click="closeModal"
                     class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2">
