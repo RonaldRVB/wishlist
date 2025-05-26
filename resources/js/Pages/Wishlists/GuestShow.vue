@@ -1,6 +1,7 @@
 <script setup>
 import { usePage, router } from "@inertiajs/vue3";
 import { Head } from "@inertiajs/vue3";
+import { ref } from "vue";
 
 document.title = "Wishlist - Liste de souhaits";
 
@@ -26,6 +27,19 @@ const isGuest = user?.salutation_id === 5;
 
 function logout() {
     router.post(route("logout"));
+}
+
+const showModal = ref(false);
+const modalImageUrl = ref("");
+
+function openModal(imagePath) {
+    modalImageUrl.value = "/storage/" + imagePath;
+    showModal.value = true;
+}
+
+function closeModal() {
+    showModal.value = false;
+    modalImageUrl.value = "";
 }
 </script>
 
@@ -55,8 +69,8 @@ function logout() {
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 <div v-for="gift in gifts" :key="gift.id"
                     class="bg-white p-4 rounded-xl shadow border border-blue-300 flex flex-col items-center">
-                    <img v-if="gift.image" :src="'/storage/' + gift.image" alt="Image du cadeau"
-                        class="w-full h-40 object-cover rounded-lg mb-4" />
+                    <img v-if="gift.image" :src="'/storage/' + gift.image" :alt="gift.name"
+                        class="w-32 h-32 object-cover rounded-xl mb-3 cursor-pointer" @click="openModal(gift.image)" />
                     <h2 class="text-lg font-bold text-blue-900 text-center mb-2">
                         {{ gift.name }}
                     </h2>
@@ -91,6 +105,18 @@ function logout() {
                     <span>Accès invité temporaire</span>
                 </div>
             </div>
+        </div>
+    </div>
+    <!-- Modal image agrandie -->
+    <div v-if="showModal"
+        class="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center z-50">
+        <div class="relative bg-[#E3EFFD] p-4 rounded-lg shadow-xl flex justify-center items-center">
+            <img :src="modalImageUrl" alt="Image du cadeau agrandie"
+                class="max-w-full max-h-[70vh] object-contain rounded" />
+            <button @click="closeModal"
+                class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2">
+                ✕
+            </button>
         </div>
     </div>
 </template>
