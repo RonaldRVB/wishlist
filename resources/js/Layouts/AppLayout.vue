@@ -125,32 +125,45 @@ watch(
                 <!-- Liens Admin -->
                 <hr v-if="isAdmin" class="border-t-4 border-[#F87171] border-double my-6 w-full" />
 
+                <!-- Utilisateurs -->
                 <div v-if="isAdmin"
                     class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
                     :class="{
                         'bg-[#2DD4BF] text-blue-800':
-                            route().current('users.index'),
+                            route().current('users.index') ||
+                            route().current('users.create') ||
+                            route().current('users.edit') ||
+                            route().current('users.show'),
                     }" @click="handleNavigation('users.index')">
                     Utilisateurs
                 </div>
 
+                <!-- Documents légaux -->
                 <div v-if="isAdmin"
                     class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
                     :class="{
                         'bg-[#2DD4BF] text-blue-800':
-                            route().current('documents.index'),
+                            route().current('documents.index') ||
+                            route().current('documents.create') ||
+                            route().current('documents.edit') ||
+                            route().current('documents.show'),
                     }" @click="handleNavigation('documents.index')">
                     Documents légaux
                 </div>
 
+                <!-- Images par défaut -->
                 <div v-if="isAdmin"
                     class="block text-lg font-semibold py-2 px-4 rounded-lg hover:text-blue-800 hover:bg-[#E3EFFD] cursor-pointer"
                     :class="{
                         'bg-[#2DD4BF] text-blue-800':
-                            route().current('images.index'),
+                            route().current('images.index') ||
+                            route().current('images.create') ||
+                            route().current('images.edit') ||
+                            route().current('images.show'),
                     }" @click="handleNavigation('images.index')">
                     Images par défaut
                 </div>
+
             </nav>
 
             <hr class="border-[#F87171] my-4 mt-4" />
